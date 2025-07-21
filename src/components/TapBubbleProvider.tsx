@@ -4,15 +4,15 @@ import type React from "react"
 import { createContext, useContext, useCallback } from "react"
 
 interface TapBubbleContextType {
-  createBubble: (x: number, y: number) => void
+  createTapBubble: (x: number, y: number) => void
 }
 
-const TapBubbleContext = createContext<TapBubbleContextType | null>(null)
+const TapBubbleContext = createContext<TapBubbleContextType | undefined>(undefined)
 
 export const useTapBubble = () => {
   const context = useContext(TapBubbleContext)
   if (!context) {
-    throw new Error("useTapBubble must be used within TapBubbleProvider")
+    throw new Error("useTapBubble must be used within a TapBubbleProvider")
   }
   return context
 }
@@ -21,14 +21,15 @@ interface TapBubbleProviderProps {
   children: React.ReactNode
 }
 
-export default function TapBubbleProvider({ children }: TapBubbleProviderProps) {
-  const createBubble = useCallback((x: number, y: number) => {
+const TapBubbleProvider: React.FC<TapBubbleProviderProps> = ({ children }) => {
+  const createTapBubble = useCallback((x: number, y: number) => {
     const bubble = document.createElement("div")
     bubble.className = "tap-bubble"
-    bubble.style.left = `${x - 25}px`
-    bubble.style.top = `${y - 25}px`
-    bubble.style.width = "50px"
-    bubble.style.height = "50px"
+    bubble.style.left = `${x - 20}px`
+    bubble.style.top = `${y - 20}px`
+    bubble.style.width = "40px"
+    bubble.style.height = "40px"
+    bubble.style.border = "2px dashed #74b9ff"
 
     document.body.appendChild(bubble)
 
@@ -39,5 +40,18 @@ export default function TapBubbleProvider({ children }: TapBubbleProviderProps) 
     }, 1000)
   }, [])
 
-  return <TapBubbleContext.Provider value={{ createBubble }}>{children}</TapBubbleContext.Provider>
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      createTapBubble(e.clientX, e.clientY)
+    },
+    [createTapBubble],
+  )
+
+  return (
+    <TapBubbleContext.Provider value={{ createTapBubble }}>
+      <div onClick={handleClick}>{children}</div>
+    </TapBubbleContext.Provider>
+  )
 }
+
+export default TapBubbleProvider

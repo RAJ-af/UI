@@ -1,66 +1,67 @@
+import type React from "react"
 import { Mail, Phone, MapPin } from "lucide-react"
 
-export default function Footer() {
+const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8 mt-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="bg-notebook-text text-white py-8 mt-12">
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* School Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-notebook">Homework Club</h3>
+            <h3 className="text-xl font-bold mb-4">Homework Club</h3>
+            <p className="text-gray-300 mb-4">Lal Chand Sharma Higher Secondary School</p>
             <p className="text-gray-300 text-sm">
-              Supporting students at Lal Chand Sharma Higher Secondary School with their academic journey.
+              Empowering students through collaborative learning and academic excellence.
             </p>
           </div>
 
+          {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-notebook">Contact Info</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center">
-                <Mail className="w-4 h-4 mr-2" />
-                <span>himanshubhatnagar.in@gmail.com</span>
+            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3">
+                <Mail className="w-5 h-5 text-notebook-blue" />
+                <span className="text-gray-300">homeworkclub@lcshs.edu</span>
               </div>
-              <div className="flex items-center">
-                <Phone className="w-4 h-4 mr-2" />
-                <span>7011476556</span>
+              <div className="flex items-center space-x-3">
+                <Phone className="w-5 h-5 text-notebook-green" />
+                <span className="text-gray-300">+91 98765 43210</span>
               </div>
-              <div className="flex items-center">
-                <MapPin className="w-4 h-4 mr-2" />
-                <span>Lal Chand Sharma Higher Secondary School</span>
+              <div className="flex items-center space-x-3">
+                <MapPin className="w-5 h-5 text-notebook-red" />
+                <span className="text-gray-300">School Campus, Education District</span>
               </div>
             </div>
           </div>
 
+          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-notebook">Quick Links</h3>
-            <div className="space-y-2 text-sm">
-              <div>
-                <a href="/library" className="hover:text-notebook-blue transition-colors">
-                  Study Library
-                </a>
-              </div>
-              <div>
-                <a href="/ask-ai" className="hover:text-notebook-blue transition-colors">
-                  Ask AI
-                </a>
-              </div>
-              <div>
-                <a href="/timer" className="hover:text-notebook-blue transition-colors">
-                  Study Timer
-                </a>
-              </div>
-              <div>
-                <a href="/join-group" className="hover:text-notebook-blue transition-colors">
-                  Join WhatsApp Group
-                </a>
-              </div>
+            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
+            <div className="space-y-2">
+              <a href="#" className="block text-gray-300 hover:text-notebook-blue transition-colors">
+                Study Materials
+              </a>
+              <a href="#" className="block text-gray-300 hover:text-notebook-green transition-colors">
+                Assignment Help
+              </a>
+              <a href="#" className="block text-gray-300 hover:text-notebook-yellow transition-colors">
+                Exam Preparation
+              </a>
+              <a href="#" className="block text-gray-300 hover:text-notebook-red transition-colors">
+                Student Support
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>&copy; 2024 Homework Club. Made with ❤️ for students.</p>
+        <div className="border-t border-gray-700 mt-8 pt-6 text-center">
+          <p className="text-gray-400">
+            © 2024 Homework Club - Lal Chand Sharma Higher Secondary School. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
   )
 }
+
+export default Footer

@@ -1,19 +1,28 @@
 /** @type {import('tailwindcss').Config} */
-const defaultConfig = require("shadcn/ui/tailwind.config")
-
 module.exports = {
-  ...defaultConfig,
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", "*.{js,ts,jsx,tsx,mdx}"],
+  darkMode: ["class"],
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "*.{js,ts,jsx,tsx,mdx}",
+  ],
   theme: {
-    ...defaultConfig.theme,
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
-      ...defaultConfig.theme.extend,
       fontFamily: {
         notebook: ["Comic Sans MS", "cursive"],
         mono: ["Courier New", "monospace"],
       },
       colors: {
-        ...defaultConfig.theme.extend.colors,
         notebook: {
           bg: "#f8f9fa",
           paper: "#ffffff",
@@ -71,6 +80,8 @@ module.exports = {
         splash: "splash 1.5s ease-out",
         "tap-bubble": "tapBubble 1s ease-out forwards",
         "sketch-draw": "sketchDraw 0.8s ease-out forwards",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
       keyframes: {
         wiggle: {
@@ -95,8 +106,16 @@ module.exports = {
           "0%": { strokeDasharray: "0 100" },
           "100%": { strokeDasharray: "100 0" },
         },
+        "accordion-down": {
+          from: { height: 0 },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: 0 },
+        },
       },
     },
   },
-  plugins: [...defaultConfig.plugins, require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")],
 }

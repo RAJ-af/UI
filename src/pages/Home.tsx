@@ -1,152 +1,150 @@
+import type React from "react"
 import { Link } from "react-router-dom"
-import { BookOpen, MessageSquare, Camera, Timer, Users, ArrowRight } from "lucide-react"
+import { BookOpen, MessageCircle, Scan, Timer, Users, Star } from "lucide-react"
 import StudentCharacter from "../components/StudentCharacter"
 import LoadingButton from "../components/LoadingButton"
-import WhatsAppButton from "../components/WhatsAppButton"
 
-export default function Home() {
+const Home: React.FC = () => {
   const features = [
     {
       icon: BookOpen,
-      title: "Study Library",
-      description: "Upload and organize your study materials, notes, and documents",
-      href: "/library",
-      color: "bg-notebook-blue",
+      title: "Digital Library",
+      description: "Access study materials, notes, and resources",
+      color: "blue",
+      path: "/library",
     },
     {
-      icon: MessageSquare,
+      icon: MessageCircle,
       title: "Ask AI",
-      description: "Get instant help with your homework and study questions",
-      href: "/ask-ai",
-      color: "bg-notebook-green",
+      description: "Get instant help with your homework questions",
+      color: "green",
+      path: "/ask-ai",
     },
     {
-      icon: Camera,
+      icon: Scan,
       title: "Scan Doubts",
-      description: "Take photos of problems and get step-by-step solutions",
-      href: "/scan-doubts",
-      color: "bg-notebook-yellow",
+      description: "Upload images of problems for quick solutions",
+      color: "yellow",
+      path: "/scan-doubts",
     },
     {
       icon: Timer,
       title: "Study Timer",
-      description: "Track your study sessions and build consistent habits",
-      href: "/timer",
-      color: "bg-notebook-red",
+      description: "Track your study sessions with Pomodoro technique",
+      color: "red",
+      path: "/timer",
     },
   ]
 
   return (
-    <div className="min-h-screen bg-notebook-bg">
+    <div className="space-y-12">
       {/* Hero Section */}
-      <section className="py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex justify-center mb-8">
-              <StudentCharacter type="happy" size="xl" className="character-float" />
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 font-notebook sketch-underline">
-              Welcome to Homework Club
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Your digital study companion for academic success at Lal Chand Sharma Higher Secondary School
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/library">
-                <LoadingButton className="btn-notebook btn-blue">
-                  Get Started
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </LoadingButton>
-              </Link>
-              <WhatsAppButton className="w-full sm:w-auto" />
-            </div>
-          </div>
+      <section className="text-center space-y-8">
+        <div className="relative">
+          <StudentCharacter type="happy" size="large" className="character-float mx-auto mb-6" />
+        </div>
+
+        <div className="space-y-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-notebook-text sketch-underline">
+            Welcome to Homework Club!
+          </h1>
+          <p className="text-xl text-notebook-text/80 max-w-2xl mx-auto">
+            Your one-stop destination for academic success at Lal Chand Sharma Higher Secondary School
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link to="/join-group">
+            <LoadingButton variant="green" className="text-lg px-8 py-4">
+              <Users className="w-5 h-5 mr-2" />
+              Join Study Group
+            </LoadingButton>
+          </Link>
+          <Link to="/library">
+            <LoadingButton variant="blue" className="text-lg px-8 py-4">
+              <BookOpen className="w-5 h-5 mr-2" />
+              Explore Library
+            </LoadingButton>
+          </Link>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 font-notebook sketch-underline">
-              Everything You Need to Excel
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Comprehensive tools designed to support your learning journey and academic growth
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => {
-              const Icon = feature.icon
-              return (
-                <Link key={index} to={feature.href} className="group">
-                  <div className="notebook-card h-full hover:transform hover:scale-105 transition-all duration-200 cursor-pointer">
-                    <div
-                      className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4 sketch-border group-hover:animate-wiggle`}
-                    >
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2 font-notebook">{feature.title}</h3>
-                    <p className="text-gray-600 text-sm">{feature.description}</p>
-                    <div className="mt-4 flex items-center text-notebook-blue text-sm font-medium">
-                      Learn More
-                      <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                    </div>
+      {/* Features Grid */}
+      <section className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {features.map((feature, index) => {
+          const Icon = feature.icon
+          return (
+            <Link key={index} to={feature.path}>
+              <div className="notebook-card hover:transform hover:scale-105 transition-all duration-300 cursor-pointer">
+                <div className="text-center space-y-4">
+                  <div
+                    className={`w-16 h-16 mx-auto rounded-full bg-notebook-${feature.color} flex items-center justify-center`}
+                  >
+                    <Icon className="w-8 h-8 text-white" />
                   </div>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
+                  <h3 className="text-xl font-bold text-notebook-text">{feature.title}</h3>
+                  <p className="text-notebook-text/70">{feature.description}</p>
+                </div>
+              </div>
+            </Link>
+          )
+        })}
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="notebook-card">
-              <div className="text-3xl font-bold text-notebook-blue mb-2 font-notebook">500+</div>
-              <div className="text-gray-600">Students Helped</div>
-            </div>
-            <div className="notebook-card">
-              <div className="text-3xl font-bold text-notebook-green mb-2 font-notebook">1000+</div>
-              <div className="text-gray-600">Problems Solved</div>
-            </div>
-            <div className="notebook-card">
-              <div className="text-3xl font-bold text-notebook-red mb-2 font-notebook">24/7</div>
-              <div className="text-gray-600">AI Support</div>
-            </div>
+      <section className="notebook-card">
+        <div className="grid md:grid-cols-3 gap-8 text-center">
+          <div className="space-y-2">
+            <div className="text-3xl font-bold text-notebook-blue">500+</div>
+            <div className="text-notebook-text/70">Active Students</div>
+          </div>
+          <div className="space-y-2">
+            <div className="text-3xl font-bold text-notebook-green">1000+</div>
+            <div className="text-notebook-text/70">Problems Solved</div>
+          </div>
+          <div className="space-y-2">
+            <div className="text-3xl font-bold text-notebook-yellow">50+</div>
+            <div className="text-notebook-text/70">Study Materials</div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* Testimonials */}
+      <section className="space-y-8">
+        <h2 className="text-3xl font-bold text-center text-notebook-text sketch-underline">What Students Say</h2>
+
+        <div className="grid md:grid-cols-2 gap-6">
           <div className="notebook-card">
-            <div className="flex justify-center mb-6">
-              <StudentCharacter type="studying" size="lg" className="character-float" />
+            <div className="flex items-start space-x-4">
+              <StudentCharacter type="studying" size="small" />
+              <div className="space-y-2">
+                <div className="flex text-notebook-yellow">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-notebook-text/80">
+                  "The AI help feature is amazing! It explains concepts so clearly."
+                </p>
+                <p className="text-sm text-notebook-text/60">- Priya, Class 12</p>
+              </div>
             </div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-4 font-notebook">
-              Ready to Start Your Learning Journey?
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Join hundreds of students who are already improving their grades with Homework Club
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/join-group">
-                <LoadingButton className="btn-notebook btn-green">
-                  <Users className="w-5 h-5 mr-2" />
-                  Join Study Group
-                </LoadingButton>
-              </Link>
-              <Link to="/ask-ai">
-                <LoadingButton className="btn-notebook btn-blue">
-                  <MessageSquare className="w-5 h-5 mr-2" />
-                  Ask Your First Question
-                </LoadingButton>
-              </Link>
+          </div>
+
+          <div className="notebook-card">
+            <div className="flex items-start space-x-4">
+              <StudentCharacter type="reading" size="small" />
+              <div className="space-y-2">
+                <div className="flex text-notebook-yellow">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-notebook-text/80">
+                  "Study timer helps me stay focused. My grades improved significantly!"
+                </p>
+                <p className="text-sm text-notebook-text/60">- Rahul, Class 11</p>
+              </div>
             </div>
           </div>
         </div>
@@ -154,3 +152,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home

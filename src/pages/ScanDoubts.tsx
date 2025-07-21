@@ -2,14 +2,23 @@
 
 import type React from "react"
 import { useState, useRef } from "react"
-import { Camera, Upload, Zap, CheckCircle, AlertCircle, ImageIcon } from "lucide-react"
-import LoadingButton from "../components/LoadingButton"
+import { Camera, Upload, ImageIcon, Zap, CheckCircle, AlertCircle } from "lucide-react"
 import StudentCharacter from "../components/StudentCharacter"
+import LoadingButton from "../components/LoadingButton"
 
-export default function ScanDoubts() {
+interface ScannedResult {
+  id: number
+  question: string
+  solution: string
+  subject: string
+  confidence: number
+  timestamp: Date
+}
+
+const ScanDoubts: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [analysis, setAnalysis] = useState<string | null>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [results, setResults] = useState<ScannedResult[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,43 +27,42 @@ export default function ScanDoubts() {
       const reader = new FileReader()
       reader.onload = (e) => {
         setSelectedImage(e.target?.result as string)
-        setAnalysis(null)
       }
       reader.readAsDataURL(file)
     }
   }
 
-  const handleAnalyze = () => {
+  const handleScan = async () => {
     if (!selectedImage) return
 
-    setIsAnalyzing(true)
+    setIsProcessing(true)
 
-    // Simulate AI analysis
+    // Simulate processing
     setTimeout(() => {
-      setAnalysis(`
-**Problem Identified:** Mathematical equation solving
+      const mockResult: ScannedResult = {
+        id: results.length + 1,
+        question: "Solve the quadratic equation: x² + 5x + 6 = 0",
+        solution: `To solve x² + 5x + 6 = 0, we can use factoring:
 
-**Step-by-Step Solution:**
+Step 1: Look for two numbers that multiply to 6 and add to 5
+Those numbers are 2 and 3 (2 × 3 = 6, 2 + 3 = 5)
 
-1. **Identify the equation type:** This appears to be a quadratic equation
-2. **Apply the quadratic formula:** x = (-b ± √(b²-4ac)) / 2a
-3. **Substitute values:** Insert the coefficients from your equation
-4. **Calculate discriminant:** Determine b²-4ac
-5. **Find solutions:** Calculate both possible values of x
+Step 2: Factor the equation
+x² + 5x + 6 = (x + 2)(x + 3) = 0
 
-**Key Concepts:**
-- Quadratic equations have two solutions
-- The discriminant tells us about the nature of solutions
-- Always check your answers by substituting back
+Step 3: Solve for x
+x + 2 = 0  →  x = -2
+x + 3 = 0  →  x = -3
 
-**Practice Tips:**
-- Practice identifying equation types
-- Memorize the quadratic formula
-- Double-check your arithmetic
+Therefore, x = -2 or x = -3`,
+        subject: "Mathematics",
+        confidence: 95,
+        timestamp: new Date(),
+      }
 
-Would you like me to explain any of these steps in more detail?
-      `)
-      setIsAnalyzing(false)
+      setResults((prev) => [mockResult, ...prev])
+      setIsProcessing(false)
+      setSelectedImage(null)
     }, 3000)
   }
 
@@ -63,126 +71,159 @@ Would you like me to explain any of these steps in more detail?
   }
 
   return (
-    <div className="min-h-screen bg-notebook-bg py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <StudentCharacter type="thinking" size="lg" className="character-float" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 sketch-underline">Scan Your Doubts</h1>
-          <p className="text-gray-600">Take a photo of any problem and get instant step-by-step solutions</p>
+    <div className="max-w-4xl mx-auto space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <div className="flex justify-center">
+          <StudentCharacter type="thinking" size="large" className="character-float" />
         </div>
+        <h1 className="text-4xl font-bold text-notebook-text sketch-underline">Scan Your Doubts</h1>
+        <p className="text-xl text-notebook-text/80">Upload images of problems and get instant solutions</p>
+      </div>
 
-        {/* Upload Section */}
-        <div className="notebook-card mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Upload Problem Image</h2>
-
+      {/* Upload Section */}
+      <div className="notebook-card">
+        <div className="space-y-6">
           {!selectedImage ? (
-            <div className="border-2 border-dashed border-gray-400 rounded-lg p-12 text-center hover:border-notebook-blue transition-colors bg-gray-50">
-              <Camera className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">Take a Photo or Upload Image</h3>
-              <p className="text-gray-600 mb-6">Capture your homework problem clearly for best results</p>
-
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <LoadingButton
-                  onClick={triggerFileInput}
-                  className="btn-notebook btn-blue flex items-center justify-center"
-                >
-                  <Upload className="w-5 h-5 mr-2" />
-                  Choose Image
-                </LoadingButton>
-                <LoadingButton
-                  onClick={triggerFileInput}
-                  className="btn-notebook btn-green flex items-center justify-center"
-                >
-                  <Camera className="w-5 h-5 mr-2" />
-                  Take Photo
-                </LoadingButton>
+            <div className="border-2 border-dashed border-notebook-blue rounded-lg p-8 text-center">
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <ImageIcon className="w-16 h-16 text-notebook-blue/50" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-notebook-text mb-2">Upload a problem image</h3>
+                  <p className="text-notebook-text/70 mb-4">Take a photo or upload an image of your homework problem</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <LoadingButton onClick={triggerFileInput} variant="blue" className="px-6 py-3">
+                    <Upload className="w-5 h-5 mr-2" />
+                    Choose File
+                  </LoadingButton>
+                  <LoadingButton onClick={triggerFileInput} variant="green" className="px-6 py-3">
+                    <Camera className="w-5 h-5 mr-2" />
+                    Take Photo
+                  </LoadingButton>
+                </div>
               </div>
-
-              <p className="text-sm text-gray-500 mt-4">Supported formats: JPG, PNG, WEBP (Max 5MB)</p>
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="relative">
                 <img
-                  src={selectedImage || "/placeholder.png"}
+                  src={selectedImage || "/placeholder.svg"}
                   alt="Uploaded problem"
-                  className="w-full max-w-md mx-auto rounded-lg shadow-lg"
+                  className="w-full max-h-64 object-contain rounded-lg border-2 border-gray-300"
                 />
                 <button
-                  onClick={() => {
-                    setSelectedImage(null)
-                    setAnalysis(null)
-                  }}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition-colors"
+                  onClick={() => setSelectedImage(null)}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600"
                 >
                   ×
                 </button>
               </div>
-
-              <div className="text-center">
+              <div className="flex justify-center">
                 <LoadingButton
-                  onClick={handleAnalyze}
-                  disabled={isAnalyzing}
-                  className="btn-notebook btn-blue flex items-center justify-center mx-auto"
-                  loadingText="Analyzing..."
-                  loadingDuration={3000}
+                  onClick={handleScan}
+                  variant="green"
+                  className="px-8 py-3 text-lg"
+                  disabled={isProcessing}
                 >
                   <Zap className="w-5 h-5 mr-2" />
-                  Analyze Problem
+                  {isProcessing ? "Processing..." : "Scan & Solve"}
                 </LoadingButton>
               </div>
             </div>
           )}
+
+          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
         </div>
+      </div>
 
-        {/* Analysis Results */}
-        {analysis && (
-          <div className="notebook-card mb-8">
-            <div className="flex items-center mb-4">
-              <CheckCircle className="w-6 h-6 text-notebook-green mr-2" />
-              <h2 className="text-xl font-semibold text-gray-800">Solution Analysis</h2>
+      {/* Processing Animation */}
+      {isProcessing && (
+        <div className="notebook-card bg-notebook-blue/5 border-notebook-blue">
+          <div className="text-center space-y-4">
+            <div className="flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-notebook-blue"></div>
             </div>
-            <div className="prose max-w-none">
-              <div className="whitespace-pre-line text-gray-700 leading-relaxed">{analysis}</div>
-            </div>
-            <div className="mt-6 flex flex-col sm:flex-row gap-4">
-              <LoadingButton className="btn-notebook btn-green flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 mr-2" />
-                Mark as Solved
-              </LoadingButton>
-              <LoadingButton className="btn-notebook btn-yellow flex items-center justify-center">
-                <AlertCircle className="w-5 h-5 mr-2" />
-                Need More Help
-              </LoadingButton>
+            <div>
+              <h3 className="text-lg font-bold text-notebook-text">Processing your image...</h3>
+              <p className="text-notebook-text/70">Our AI is analyzing the problem and preparing a solution</p>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Tips */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="notebook-card text-center">
-            <ImageIcon className="w-8 h-8 text-notebook-blue mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-800 mb-1">Clear Images</h3>
-            <p className="text-sm text-gray-600">Ensure text is readable and well-lit</p>
+      {/* Results */}
+      {results.length > 0 && (
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-notebook-text sketch-underline">Recent Solutions</h2>
+
+          {results.map((result) => (
+            <div key={result.id} className="notebook-card">
+              <div className="space-y-4">
+                {/* Header */}
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-3">
+                    <CheckCircle className="w-6 h-6 text-notebook-green" />
+                    <div>
+                      <h3 className="text-lg font-bold text-notebook-text">Problem Solved</h3>
+                      <div className="flex items-center space-x-4 text-sm text-notebook-text/70">
+                        <span>Subject: {result.subject}</span>
+                        <span>Confidence: {result.confidence}%</span>
+                        <span>{result.timestamp.toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Question */}
+                <div className="bg-notebook-blue/10 p-4 rounded-lg border-l-4 border-notebook-blue">
+                  <h4 className="font-bold text-notebook-text mb-2">Question:</h4>
+                  <p className="text-notebook-text/80">{result.question}</p>
+                </div>
+
+                {/* Solution */}
+                <div className="bg-notebook-green/10 p-4 rounded-lg border-l-4 border-notebook-green">
+                  <h4 className="font-bold text-notebook-text mb-2">Solution:</h4>
+                  <pre className="text-notebook-text/80 whitespace-pre-wrap font-sans">{result.solution}</pre>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Tips */}
+      <div className="notebook-card bg-notebook-yellow/10 border-notebook-yellow">
+        <div className="flex items-start space-x-3">
+          <AlertCircle className="w-6 h-6 text-notebook-yellow mt-1" />
+          <div>
+            <h3 className="text-lg font-bold text-notebook-text mb-3">Tips for better results:</h3>
+            <ul className="space-y-2 text-notebook-text/80">
+              <li>• Ensure the image is clear and well-lit</li>
+              <li>• Make sure the text/equations are clearly visible</li>
+              <li>• Crop the image to focus on the specific problem</li>
+              <li>• Avoid blurry or tilted images</li>
+              <li>• Include any relevant context or instructions</li>
+            </ul>
           </div>
-          <div className="notebook-card text-center">
-            <Camera className="w-8 h-8 text-notebook-green mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-800 mb-1">Focus on Problem</h3>
-            <p className="text-sm text-gray-600">Crop to show only the relevant question</p>
-          </div>
-          <div className="notebook-card text-center">
-            <Zap className="w-8 h-8 text-notebook-yellow mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-800 mb-1">Instant Results</h3>
-            <p className="text-sm text-gray-600">Get solutions in seconds</p>
-          </div>
+        </div>
+      </div>
+
+      {/* Supported Subjects */}
+      <div className="notebook-card">
+        <h3 className="text-lg font-bold text-notebook-text mb-4">Supported Subjects:</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {["Mathematics", "Physics", "Chemistry", "Biology"].map((subject) => (
+            <div key={subject} className="text-center p-3 bg-notebook-blue/10 rounded-lg">
+              <span className="font-medium text-notebook-text">{subject}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   )
 }
-</merged_code>
+
+export default ScanDoubts
