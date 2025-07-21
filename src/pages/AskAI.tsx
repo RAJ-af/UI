@@ -1,15 +1,14 @@
 "use client"
 
-import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { Send, Bot, User, Loader2, Sparkles, BookOpen } from "lucide-react"
+import { useState } from "react"
+import { Send, Bot, User, Lightbulb, BookOpen, Calculator, Beaker } from "lucide-react"
 import LoadingButton from "../components/LoadingButton"
 import StudentCharacter from "../components/StudentCharacter"
 
 interface Message {
   id: string
-  type: "user" | "ai"
-  content: string
+  text: string
+  sender: "user" | "ai"
   timestamp: Date
 }
 
@@ -17,185 +16,175 @@ export default function AskAI() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      type: "ai",
-      content:
-        "Hello! I'm your AI study assistant. I can help you with homework questions, explain concepts, solve problems, and provide study guidance. What would you like to learn about today?",
+      text: "Hello! I'm your AI study assistant. Ask me anything about your homework, and I'll help you understand the concepts step by step!",
+      sender: "ai",
       timestamp: new Date(),
     },
   ])
-  const [inputMessage, setInputMessage] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const [inputText, setInputText] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  const quickQuestions = [
+    { text: "Explain photosynthesis", icon: Beaker },
+    { text: "Help with algebra", icon: Calculator },
+    { text: "History essay tips", icon: BookOpen },
+    { text: "Study techniques", icon: Lightbulb },
+  ]
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return
+    if (!inputText.trim()) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      type: "user",
-      content: inputMessage,
+      text: inputText,
+      sender: "user",
       timestamp: new Date(),
     }
 
     setMessages((prev) => [...prev, userMessage])
-    setInputMessage("")
-    setIsLoading(true)
+    setInputText("")
+    setIsTyping(true)
 
     // Simulate AI response
     setTimeout(() => {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        type: "ai",
-        content: `I understand you're asking about "${inputMessage}". Let me help you with that! This is a simulated response. In a real implementation, this would connect to an AI service to provide detailed explanations, step-by-step solutions, and helpful study guidance tailored to your question.`,
+        text: `I understand you're asking about "${inputText}". Let me break this down for you step by step:\n\n1. First, let's identify the key concepts\n2. Then we'll work through the solution\n3. Finally, I'll give you some practice tips\n\nWould you like me to explain any specific part in more detail?`,
+        sender: "ai",
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, aiResponse])
-      setIsLoading(false)
-    }, 1500)
+      setIsTyping(false)
+    }, 2000)
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
+  const handleQuickQuestion = (question: string) => {
+    setInputText(question)
   }
-
-  const quickQuestions = [
-    "Explain quadratic equations",
-    "Help with essay structure",
-    "Physics motion problems",
-    "Chemistry periodic table",
-    "History timeline help",
-    "Math word problems",
-  ]
 
   return (
-    <div className="min-h-screen bg-notebook-bg">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-notebook-bg py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <div className="w-12 h-12 bg-notebook-yellow rounded-full flex items-center justify-center sketch-border mr-3">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <StudentCharacter type="thinking" size="md" className="character-float" />
+          <div className="flex justify-center mb-4">
+            <StudentCharacter type="thinking" size="lg" className="character-float" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 sketch-underline">AI Study Assistant</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2 sketch-underline">Ask AI Assistant</h1>
           <p className="text-gray-600">Get instant help with your homework and study questions</p>
         </div>
 
         {/* Quick Questions */}
-        {messages.length === 1 && (
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Quick Questions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {quickQuestions.map((question, index) => (
-                <LoadingButton
+        <div className="notebook-card mb-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Questions</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {quickQuestions.map((question, index) => {
+              const Icon = question.icon
+              return (
+                <button
                   key={index}
-                  onClick={() => setInputMessage(question)}
-                  className="p-3 text-left bg-white border-2 border-gray-300 hover:border-notebook-blue text-gray-700 rounded-lg transition-colors sketch-border"
+                  onClick={() => handleQuickQuestion(question.text)}
+                  className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-left"
                 >
-                  <span className="text-sm">{question}</span>
-                </LoadingButton>
-              ))}
-            </div>
+                  <Icon className="w-5 h-5 text-notebook-blue mr-3" />
+                  <span className="text-gray-700">{question.text}</span>
+                </button>
+              )
+            })}
           </div>
-        )}
+        </div>
 
         {/* Chat Container */}
-        <div className="notebook-card flex flex-col h-[600px] p-0">
+        <div className="notebook-card">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 notebook-paper">
+          <div className="h-96 overflow-y-auto mb-4 space-y-4">
             {messages.map((message) => (
-              <div key={message.id} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`flex max-w-[80%] ${message.type === "user" ? "flex-row-reverse" : "flex-row"}`}>
+              <div key={message.id} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`flex items-start space-x-3 max-w-xs lg:max-w-md ${message.sender === "user" ? "flex-row-reverse space-x-reverse" : ""}`}
+                >
                   <div
-                    className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                      message.type === "user" ? "bg-notebook-blue ml-3" : "bg-notebook-yellow mr-3"
-                    } sketch-border`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${message.sender === "user" ? "bg-notebook-blue" : "bg-notebook-green"}`}
                   >
-                    {message.type === "user" ? (
+                    {message.sender === "user" ? (
                       <User className="w-4 h-4 text-white" />
                     ) : (
                       <Bot className="w-4 h-4 text-white" />
                     )}
                   </div>
                   <div
-                    className={`rounded-lg p-4 sketch-border ${
-                      message.type === "user" ? "bg-notebook-blue text-white" : "bg-gray-100 text-gray-800"
-                    }`}
+                    className={`rounded-lg p-3 ${message.sender === "user" ? "bg-notebook-blue text-white" : "bg-gray-100 text-gray-800"}`}
                   >
-                    <p className="whitespace-pre-wrap">{message.content}</p>
-                    <p className={`text-xs mt-2 ${message.type === "user" ? "text-blue-200" : "text-gray-500"}`}>
-                      {message.timestamp.toLocaleTimeString()}
+                    <p className="text-sm whitespace-pre-line">{message.text}</p>
+                    <p className="text-xs mt-1 opacity-70">
+                      {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </p>
                   </div>
                 </div>
               </div>
             ))}
 
-            {isLoading && (
+            {isTyping && (
               <div className="flex justify-start">
-                <div className="flex">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-notebook-yellow mr-3 flex items-center justify-center sketch-border">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 rounded-full bg-notebook-green flex items-center justify-center">
                     <Bot className="w-4 h-4 text-white" />
                   </div>
-                  <div className="bg-gray-100 rounded-lg p-4 sketch-border">
-                    <div className="flex items-center space-x-2">
-                      <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
-                      <span className="text-gray-500 loading-dots">AI is thinking</span>
+                  <div className="bg-gray-100 rounded-lg p-3">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
                     </div>
                   </div>
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
-          <div className="border-t-2 border-dashed border-gray-300 p-4">
-            <div className="flex space-x-4">
-              <textarea
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask me anything about your studies..."
-                className="flex-1 resize-none border-2 border-gray-300 rounded-lg px-4 py-2 focus:border-notebook-blue focus:outline-none sketch-border"
-                rows={1}
-                disabled={isLoading}
-              />
-              <LoadingButton
-                onClick={handleSendMessage}
-                disabled={!inputMessage.trim() || isLoading}
-                className="btn-notebook btn-blue disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-              >
-                <Send className="w-4 h-4" />
-              </LoadingButton>
-            </div>
-            <p className="text-xs text-gray-500 mt-2">Press Enter to send, Shift+Enter for new line</p>
+          <div className="flex space-x-3">
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+              placeholder="Ask me anything about your homework..."
+              className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-notebook-blue focus:outline-none sketch-border"
+              disabled={isTyping}
+            />
+            <LoadingButton
+              onClick={handleSendMessage}
+              disabled={!inputText.trim() || isTyping}
+              className="btn-notebook btn-blue px-4 py-3"
+            >
+              <Send className="w-5 h-5" />
+            </LoadingButton>
           </div>
         </div>
 
-        {/* AI Tips */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Tips */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="notebook-card text-center">
-            <BookOpen className="w-8 h-8 text-notebook-green mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-800 mb-1">Study Tips</h3>
-            <p className="text-sm text-gray-600">Ask for study strategies and learning techniques</p>
+            <Lightbulb className="w-8 h-8 text-notebook-yellow mx-auto mb-2" />
+            <h3 className="font-semibold text-gray-800 mb-1">Be Specific</h3>
+            <p className="text-sm text-gray-600">Ask detailed questions for better answers</p>
           </div>
           <div className="notebook-card text-center">
-            <Sparkles className="w-8 h-8 text-notebook-yellow mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-800 mb-1">Step-by-Step Solutions</h3>
-            <p className="text-sm text-gray-600">Get detailed explanations for complex problems</p>
+            <BookOpen className="w-8 h-8 text-notebook-blue mx-auto mb-2" />
+            <h3 className="font-semibold text-gray-800 mb-1">Include Context</h3>
+            <p className="text-sm text-gray-600">Mention your grade level and subject</p>
+          </div>
+          <div className="notebook-card text-center">
+            <Bot className="w-8 h-8 text-notebook-green mx-auto mb-2" />
+            <h3 className="font-semibold text-gray-800 mb-1">Follow Up</h3>
+            <p className="text-sm text-gray-600">Ask for clarification if needed</p>
           </div>
         </div>
       </div>
