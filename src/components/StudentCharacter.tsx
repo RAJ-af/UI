@@ -1,146 +1,150 @@
 interface StudentCharacterProps {
-  type?: "reading" | "thinking" | "writing" | "studying"
+  type: "reading" | "writing" | "thinking" | "studying"
   size?: "sm" | "md" | "lg" | "xl"
   className?: string
 }
 
-export default function StudentCharacter({ type = "reading", size = "md", className = "" }: StudentCharacterProps) {
+export default function StudentCharacter({ type, size = "md", className = "" }: StudentCharacterProps) {
   const sizeClasses = {
-    sm: "w-12 h-12",
-    md: "w-16 h-16",
-    lg: "w-24 h-24",
-    xl: "w-32 h-32",
+    sm: "w-8 h-8",
+    md: "w-12 h-12",
+    lg: "w-16 h-16",
+    xl: "w-24 h-24",
   }
 
-  const renderCharacter = () => {
+  const getCharacterSVG = () => {
+    const baseProps = {
+      viewBox: "0 0 100 100",
+      className: `${sizeClasses[size]} ${className}`,
+      fill: "none",
+      stroke: "#2d3436",
+      strokeWidth: "2",
+    }
+
     switch (type) {
       case "reading":
         return (
-          <svg viewBox="0 0 100 100" className="w-full h-full">
+          <svg {...baseProps}>
             {/* Head */}
-            <circle cx="50" cy="25" r="12" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" strokeDasharray="2,1" />
+            <circle cx="50" cy="30" r="15" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" />
             {/* Hair */}
-            <path d="M38 18 Q50 10 62 18" fill="#6c5ce7" stroke="#2d3436" strokeWidth="2" />
+            <path d="M35 20 Q50 15 65 20" stroke="#2d3436" strokeWidth="3" fill="none" />
+            {/* Eyes */}
+            <circle cx="45" cy="28" r="2" fill="#2d3436" />
+            <circle cx="55" cy="28" r="2" fill="#2d3436" />
+            {/* Smile */}
+            <path d="M45 35 Q50 38 55 35" stroke="#2d3436" strokeWidth="2" fill="none" />
             {/* Body */}
-            <ellipse
-              cx="50"
-              cy="45"
-              rx="8"
-              ry="15"
-              fill="#74b9ff"
-              stroke="#2d3436"
-              strokeWidth="2"
-              strokeDasharray="3,1"
-            />
+            <rect x="40" y="45" width="20" height="30" rx="5" fill="#74b9ff" stroke="#2d3436" />
             {/* Arms */}
-            <path d="M42 40 Q35 45 38 52" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M58 40 Q65 45 62 52" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
+            <line x1="35" y1="55" x2="25" y2="65" stroke="#2d3436" strokeWidth="3" />
+            <line x1="65" y1="55" x2="75" y2="65" stroke="#2d3436" strokeWidth="3" />
             {/* Book */}
-            <rect
-              x="40"
-              y="50"
-              width="20"
-              height="15"
-              fill="#ffffff"
-              stroke="#2d3436"
-              strokeWidth="2"
-              strokeDasharray="2,1"
-            />
-            <line x1="43" y1="55" x2="57" y2="55" stroke="#2d3436" strokeWidth="1" />
-            <line x1="43" y1="58" x2="55" y2="58" stroke="#2d3436" strokeWidth="1" />
+            <rect x="20" y="60" width="12" height="8" rx="1" fill="#ffffff" stroke="#2d3436" />
+            <line x1="22" y1="62" x2="30" y2="62" stroke="#2d3436" />
+            <line x1="22" y1="64" x2="30" y2="64" stroke="#2d3436" />
+            <line x1="22" y1="66" x2="28" y2="66" stroke="#2d3436" />
             {/* Legs */}
-            <path d="M45 60 Q42 70 45 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M55 60 Q58 70 55 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
+            <line x1="45" y1="75" x2="45" y2="85" stroke="#2d3436" strokeWidth="3" />
+            <line x1="55" y1="75" x2="55" y2="85" stroke="#2d3436" strokeWidth="3" />
           </svg>
         )
-      case "thinking":
-        return (
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <circle cx="50" cy="25" r="12" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" strokeDasharray="2,1" />
-            <path d="M38 18 Q50 10 62 18" fill="#fd79a8" stroke="#2d3436" strokeWidth="2" />
-            <ellipse
-              cx="50"
-              cy="45"
-              rx="8"
-              ry="15"
-              fill="#00b894"
-              stroke="#2d3436"
-              strokeWidth="2"
-              strokeDasharray="3,1"
-            />
-            <path d="M42 40 Q38 35 40 30" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M58 40 Q60 35 58 30" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            {/* Thought bubble */}
-            <circle cx="65" cy="15" r="8" fill="#ffffff" stroke="#2d3436" strokeWidth="2" strokeDasharray="1,1" />
-            <circle cx="60" cy="22" r="3" fill="#ffffff" stroke="#2d3436" strokeWidth="1" />
-            <circle cx="57" cy="26" r="1.5" fill="#ffffff" stroke="#2d3436" strokeWidth="1" />
-            <text x="65" y="18" textAnchor="middle" fontSize="8" fill="#2d3436">
-              ?
-            </text>
-            <path d="M45 60 Q42 70 45 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M55 60 Q58 70 55 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-        )
+
       case "writing":
         return (
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <circle cx="50" cy="25" r="12" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" strokeDasharray="2,1" />
-            <path d="M38 18 Q50 10 62 18" fill="#e17055" stroke="#2d3436" strokeWidth="2" />
-            <ellipse
-              cx="50"
-              cy="45"
-              rx="8"
-              ry="15"
-              fill="#fdcb6e"
-              stroke="#2d3436"
-              strokeWidth="2"
-              strokeDasharray="3,1"
-            />
-            <path d="M42 40 Q35 45 32 50" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M58 40 Q60 45 62 50" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
+          <svg {...baseProps}>
+            {/* Head */}
+            <circle cx="50" cy="30" r="15" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" />
+            {/* Hair */}
+            <path d="M35 20 Q50 15 65 20" stroke="#2d3436" strokeWidth="3" fill="none" />
+            {/* Eyes looking down */}
+            <circle cx="45" cy="30" r="2" fill="#2d3436" />
+            <circle cx="55" cy="30" r="2" fill="#2d3436" />
+            {/* Focused expression */}
+            <path d="M47 35 Q50 37 53 35" stroke="#2d3436" strokeWidth="2" fill="none" />
+            {/* Body */}
+            <rect x="40" y="45" width="20" height="30" rx="5" fill="#00b894" stroke="#2d3436" />
+            {/* Arms */}
+            <line x1="35" y1="55" x2="30" y2="70" stroke="#2d3436" strokeWidth="3" />
+            <line x1="65" y1="55" x2="70" y2="65" stroke="#2d3436" strokeWidth="3" />
             {/* Pencil */}
-            <rect x="28" y="48" width="10" height="2" fill="#fdcb6e" stroke="#2d3436" strokeWidth="1" />
-            <polygon points="28,48 25,49 25,51 28,52" fill="#2d3436" />
+            <line x1="70" y1="65" x2="75" y2="70" stroke="#fdcb6e" strokeWidth="3" />
+            <circle cx="75" cy="70" r="1" fill="#2d3436" />
             {/* Paper */}
-            <rect
-              x="45"
-              y="55"
-              width="18"
-              height="12"
-              fill="#ffffff"
-              stroke="#2d3436"
-              strokeWidth="2"
-              strokeDasharray="2,1"
-            />
-            <line x1="48" y1="59" x2="58" y2="59" stroke="#2d3436" strokeWidth="1" />
-            <line x1="48" y1="62" x2="55" y2="62" stroke="#2d3436" strokeWidth="1" />
-            <path d="M45 60 Q42 70 45 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M55 60 Q58 70 55 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
+            <rect x="25" y="65" width="15" height="12" rx="1" fill="#ffffff" stroke="#2d3436" />
+            <line x1="27" y1="68" x2="37" y2="68" stroke="#2d3436" />
+            <line x1="27" y1="71" x2="35" y2="71" stroke="#2d3436" />
+            <line x1="27" y1="74" x2="38" y2="74" stroke="#2d3436" />
+            {/* Legs */}
+            <line x1="45" y1="75" x2="45" y2="85" stroke="#2d3436" strokeWidth="3" />
+            <line x1="55" y1="75" x2="55" y2="85" stroke="#2d3436" strokeWidth="3" />
           </svg>
         )
+
+      case "thinking":
+        return (
+          <svg {...baseProps}>
+            {/* Head */}
+            <circle cx="50" cy="30" r="15" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" />
+            {/* Hair */}
+            <path d="M35 20 Q50 15 65 20" stroke="#2d3436" strokeWidth="3" fill="none" />
+            {/* Eyes looking up */}
+            <circle cx="45" cy="26" r="2" fill="#2d3436" />
+            <circle cx="55" cy="26" r="2" fill="#2d3436" />
+            {/* Thinking expression */}
+            <path d="M47 35 Q50 33 53 35" stroke="#2d3436" strokeWidth="2" fill="none" />
+            {/* Body */}
+            <rect x="40" y="45" width="20" height="30" rx="5" fill="#fdcb6e" stroke="#2d3436" />
+            {/* Arms - one hand to chin */}
+            <line x1="35" y1="55" x2="30" y2="45" stroke="#2d3436" strokeWidth="3" />
+            <line x1="65" y1="55" x2="70" y2="65" stroke="#2d3436" strokeWidth="3" />
+            {/* Hand to chin */}
+            <circle cx="30" cy="45" r="3" fill="#ffeaa7" stroke="#2d3436" />
+            {/* Thought bubble */}
+            <circle cx="70" cy="20" r="8" fill="#ffffff" stroke="#2d3436" />
+            <circle cx="65" cy="30" r="4" fill="#ffffff" stroke="#2d3436" />
+            <circle cx="62" cy="35" r="2" fill="#ffffff" stroke="#2d3436" />
+            {/* Question mark in thought */}
+            <path d="M67 17 Q70 14 73 17 Q73 20 70 20" stroke="#2d3436" strokeWidth="2" fill="none" />
+            <circle cx="70" cy="23" r="1" fill="#2d3436" />
+            {/* Legs */}
+            <line x1="45" y1="75" x2="45" y2="85" stroke="#2d3436" strokeWidth="3" />
+            <line x1="55" y1="75" x2="55" y2="85" stroke="#2d3436" strokeWidth="3" />
+          </svg>
+        )
+
+      case "studying":
       default:
         return (
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <circle cx="50" cy="25" r="12" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" strokeDasharray="2,1" />
-            <path d="M38 18 Q50 10 62 18" fill="#a29bfe" stroke="#2d3436" strokeWidth="2" />
-            <ellipse
-              cx="50"
-              cy="45"
-              rx="8"
-              ry="15"
-              fill="#55a3ff"
-              stroke="#2d3436"
-              strokeWidth="2"
-              strokeDasharray="3,1"
-            />
-            <path d="M42 40 Q35 45 38 52" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M58 40 Q65 45 62 52" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M45 60 Q42 70 45 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
-            <path d="M55 60 Q58 70 55 80" fill="none" stroke="#2d3436" strokeWidth="2" strokeLinecap="round" />
+          <svg {...baseProps}>
+            {/* Head */}
+            <circle cx="50" cy="30" r="15" fill="#ffeaa7" stroke="#2d3436" strokeWidth="2" />
+            {/* Hair */}
+            <path d="M35 20 Q50 15 65 20" stroke="#2d3436" strokeWidth="3" fill="none" />
+            {/* Eyes */}
+            <circle cx="45" cy="28" r="2" fill="#2d3436" />
+            <circle cx="55" cy="28" r="2" fill="#2d3436" />
+            {/* Smile */}
+            <path d="M45 35 Q50 38 55 35" stroke="#2d3436" strokeWidth="2" fill="none" />
+            {/* Body */}
+            <rect x="40" y="45" width="20" height="30" rx="5" fill="#e17055" stroke="#2d3436" />
+            {/* Arms */}
+            <line x1="35" y1="55" x2="25" y2="65" stroke="#2d3436" strokeWidth="3" />
+            <line x1="65" y1="55" x2="75" y2="65" stroke="#2d3436" strokeWidth="3" />
+            {/* Books stack */}
+            <rect x="20" y="60" width="12" height="3" rx="1" fill="#74b9ff" stroke="#2d3436" />
+            <rect x="20" y="63" width="12" height="3" rx="1" fill="#00b894" stroke="#2d3436" />
+            <rect x="20" y="66" width="12" height="3" rx="1" fill="#fdcb6e" stroke="#2d3436" />
+            {/* Laptop */}
+            <rect x="70" y="60" width="15" height="8" rx="1" fill="#2d3436" stroke="#2d3436" />
+            <rect x="71" y="61" width="13" height="6" rx="1" fill="#74b9ff" />
+            {/* Legs */}
+            <line x1="45" y1="75" x2="45" y2="85" stroke="#2d3436" strokeWidth="3" />
+            <line x1="55" y1="75" x2="55" y2="85" stroke="#2d3436" strokeWidth="3" />
           </svg>
         )
     }
   }
 
-  return <div className={`${sizeClasses[size]} ${className} edu-icon`}>{renderCharacter()}</div>
+  return getCharacterSVG()
 }

@@ -196,17 +196,4 @@ export default function Library() {
             <p className="text-sm text-gray-600">Add your handwritten or typed notes</p>
           </div>
           <div className="notebook-card text-center">
-            <FileText className="w-8 h-8 text-notebook-green mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-800 mb-1">Organize Files</h3>
-            <p className="text-sm text-gray-600">Sort by subject, date, or type</p>
-          </div>
-          <div className="notebook-card text-center">
-            <Download className="w-8 h-8 text-notebook-yellow mx-auto mb-2" />
-            <h3 className="font-semibold text-gray-800 mb-1">Access Anywhere</h3>
-            <p className="text-sm text-gray-600">Download and view on any device</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
+            <FileText className="w-8 h-8 text-notebook-green mx-auto mb\
