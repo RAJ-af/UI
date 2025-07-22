@@ -13,9 +13,17 @@ import Timer from "./pages/Timer"
 import JoinGroup from "./pages/JoinGroup"
 
 function App() {
+  const [isFirstVisit, setIsFirstVisit] = useState(false)
   const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisitedHomeworkClub")
+    if (!hasVisited) {
+      setIsFirstVisit(true)
+      localStorage.setItem("hasVisitedHomeworkClub", "true")
+    }
+
+    // Show splash screen for 3 seconds
     const timer = setTimeout(() => {
       setShowSplash(false)
     }, 3000)
@@ -30,7 +38,7 @@ function App() {
   return (
     <TapBubbleProvider>
       <Router>
-        <Layout>
+        <Layout showWelcome={isFirstVisit}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/library" element={<Library />} />

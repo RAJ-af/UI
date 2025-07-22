@@ -1,88 +1,78 @@
 "use client"
 
-import type React from "react"
 import { useState } from "react"
-import { Link, useLocation } from "react-router-dom"
-import { Menu, X, Home, BookOpen, MessageCircle, Camera, Timer, Users } from "lucide-react"
-import { cn } from "../lib/utils"
+import { Link } from "react-router-dom"
+import { Menu, X, BookOpen, Brain, Camera, Clock, Library } from "lucide-react"
+import LoadingButton from "./LoadingButton"
+import StudentCharacter from "./StudentCharacter"
 
-const Navbar: React.FC = () => {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const location = useLocation()
 
   const navItems = [
-    { path: "/", label: "Home", icon: Home },
-    { path: "/library", label: "Library", icon: BookOpen },
-    { path: "/ask-ai", label: "Ask AI", icon: MessageCircle },
-    { path: "/scan-doubts", label: "Scan", icon: Camera },
-    { path: "/timer", label: "Timer", icon: Timer },
-    { path: "/join-group", label: "Join", icon: Users },
+    { name: "Home", path: "/", icon: BookOpen, color: "text-notebook-blue" },
+    { name: "Library", path: "/library", icon: Library, color: "text-notebook-green" },
+    { name: "Ask AI", path: "/ask-ai", icon: Brain, color: "text-notebook-yellow" },
+    { name: "Scan Doubts", path: "/scan-doubts", icon: Camera, color: "text-notebook-red" },
+    { name: "Timer", path: "/timer", icon: Clock, color: "text-notebook-blue" },
   ]
 
   return (
-    <nav className="bg-white/90 backdrop-blur-sm border-b-2 border-notebook-text sketch-border sticky top-0 z-40">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-notebook-blue rounded-full flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-notebook font-bold text-xl text-notebook-text">Homework Club</span>
-          </Link>
+    <nav className="bg-white border-b-2 border-dashed border-notebook-line sticky top-0 z-40 sketch-shadow">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex items-center">
+            <Link to="/" className="flex items-center space-x-3 group">
+              <StudentCharacter type="reading" size="sm" color="blue" />
+              <span className="text-xl font-bold text-notebook-text sketch-underline">Homework Club</span>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-1">
+          <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
               const Icon = item.icon
-              const isActive = location.pathname === item.path
-
               return (
                 <Link
-                  key={item.path}
+                  key={item.name}
                   to={item.path}
-                  className={cn(
-                    "flex items-center space-x-2 px-4 py-2 rounded-lg font-notebook font-medium transition-all duration-200",
-                    isActive
-                      ? "bg-notebook-blue text-white sketch-border"
-                      : "text-notebook-text hover:bg-notebook-blue/10",
-                  )}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-xl text-notebook-text hover:bg-gray-100 transition-all duration-300 hover:scale-105 sketch-border-hover"
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.label}</span>
+                  <Icon className={`w-4 h-4 ${item.color}`} />
+                  <span className="font-medium">{item.name}</span>
                 </Link>
               )
             })}
           </div>
 
           {/* Mobile menu button */}
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden p-2 rounded-lg hover:bg-notebook-blue/10">
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          <div className="md:hidden flex items-center">
+            <LoadingButton
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-notebook-text hover:bg-gray-100 rounded-xl"
+              loadingText=""
+              animationType="stars"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </LoadingButton>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t border-notebook-line">
-            <div className="grid grid-cols-2 gap-2">
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t-2 border-dashed border-notebook-line">
               {navItems.map((item) => {
                 const Icon = item.icon
-                const isActive = location.pathname === item.path
-
                 return (
                   <Link
-                    key={item.path}
+                    key={item.name}
                     to={item.path}
+                    className="flex items-center space-x-3 text-notebook-text hover:bg-gray-100 block px-4 py-3 rounded-xl font-medium transition-all duration-300"
                     onClick={() => setIsOpen(false)}
-                    className={cn(
-                      "flex flex-col items-center space-y-1 p-3 rounded-lg font-notebook font-medium transition-all duration-200",
-                      isActive
-                        ? "bg-notebook-blue text-white sketch-border"
-                        : "text-notebook-text hover:bg-notebook-blue/10",
-                    )}
                   >
-                    <Icon className="w-5 h-5" />
-                    <span className="text-sm">{item.label}</span>
+                    <Icon className={`w-5 h-5 ${item.color}`} />
+                    <span>{item.name}</span>
                   </Link>
                 )
               })}
@@ -93,5 +83,3 @@ const Navbar: React.FC = () => {
     </nav>
   )
 }
-
-export default Navbar

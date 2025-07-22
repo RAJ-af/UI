@@ -2,269 +2,188 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Search, Download, BookOpen, FileText, Video, ImageIcon, Filter } from "lucide-react"
-import StudentCharacter from "../components/StudentCharacter"
-import LoadingButton from "../components/LoadingButton"
+import { Upload, Download, Search, Filter, FileText, Trash2, Eye } from "lucide-react"
 
-interface LibraryItem {
-  id: number
-  title: string
-  type: "pdf" | "video" | "image" | "document"
-  subject: string
-  grade: string
-  downloads: number
+interface Document {
+  id: string
+  name: string
+  type: string
   size: string
+  uploadDate: string
+  subject: string
 }
 
-const Library: React.FC = () => {
+export default function Library() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedSubject, setSelectedSubject] = useState("all")
-  const [selectedGrade, setSelectedGrade] = useState("all")
-
-  const libraryItems: LibraryItem[] = [
+  const [documents] = useState<Document[]>([
     {
-      id: 1,
-      title: "Mathematics Class 10 - Quadratic Equations",
-      type: "pdf",
+      id: "1",
+      name: "Calculus Chapter 5 Notes.pdf",
+      type: "PDF",
+      size: "2.4 MB",
+      uploadDate: "2024-01-15",
       subject: "Mathematics",
-      grade: "10",
-      downloads: 1250,
-      size: "2.5 MB",
     },
     {
-      id: 2,
-      title: "Physics - Laws of Motion Video Lecture",
-      type: "video",
+      id: "2",
+      name: "Physics Lab Report.pdf",
+      type: "PDF",
+      size: "1.8 MB",
+      uploadDate: "2024-01-14",
       subject: "Physics",
-      grade: "11",
-      downloads: 890,
-      size: "45 MB",
     },
     {
-      id: 3,
-      title: "Chemistry - Periodic Table Chart",
-      type: "image",
-      subject: "Chemistry",
-      grade: "9",
-      downloads: 2100,
-      size: "1.2 MB",
-    },
-    {
-      id: 4,
-      title: "English Grammar - Tenses Practice Sheet",
-      type: "document",
-      subject: "English",
-      grade: "8",
-      downloads: 1680,
-      size: "800 KB",
-    },
-    {
-      id: 5,
-      title: "Biology - Human Body Systems",
-      type: "pdf",
-      subject: "Biology",
-      grade: "12",
-      downloads: 945,
-      size: "3.8 MB",
-    },
-    {
-      id: 6,
-      title: "History - World War 2 Documentary",
-      type: "video",
+      id: "3",
+      name: "History Essay Draft.pdf",
+      type: "PDF",
+      size: "956 KB",
+      uploadDate: "2024-01-13",
       subject: "History",
-      grade: "10",
-      downloads: 756,
-      size: "120 MB",
     },
-  ]
+    {
+      id: "4",
+      name: "Chemistry Formulas.pdf",
+      type: "PDF",
+      size: "1.2 MB",
+      uploadDate: "2024-01-12",
+      subject: "Chemistry",
+    },
+  ])
 
-  const subjects = ["all", "Mathematics", "Physics", "Chemistry", "Biology", "English", "History"]
-  const grades = ["all", "8", "9", "10", "11", "12"]
+  const subjects = ["all", "Mathematics", "Physics", "Chemistry", "History", "English", "Biology"]
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "pdf":
-      case "document":
-        return FileText
-      case "video":
-        return Video
-      case "image":
-        return ImageIcon
-      default:
-        return FileText
-    }
-  }
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "pdf":
-        return "bg-notebook-red"
-      case "video":
-        return "bg-notebook-blue"
-      case "image":
-        return "bg-notebook-green"
-      case "document":
-        return "bg-notebook-yellow"
-      default:
-        return "bg-gray-500"
-    }
-  }
-
-  const filteredItems = libraryItems.filter((item) => {
-    const matchesSearch =
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.subject.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesSubject = selectedSubject === "all" || item.subject === selectedSubject
-    const matchesGrade = selectedGrade === "all" || item.grade === selectedGrade
-
-    return matchesSearch && matchesSubject && matchesGrade
+  const filteredDocuments = documents.filter((doc) => {
+    const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesSubject = selectedSubject === "all" || doc.subject === selectedSubject
+    return matchesSearch && matchesSubject
   })
 
-  const handleDownload = async (item: LibraryItem) => {
-    // Simulate download
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    console.log(`Downloading: ${item.title}`)
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (files) {
+      // Handle file upload logic here
+      console.log("Files selected:", files)
+    }
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="text-center">
-        <div className="mb-6">
-          <StudentCharacter type="studying" size="large" className="mx-auto" />
+    <div className="min-h-screen bg-notebook-bg py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-notebook-text mb-2 sketch-underline">Study Library</h1>
+          <p className="text-gray-600">Upload, organize, and access your study materials</p>
         </div>
-        <h1 className="text-4xl font-bold text-notebook-text mb-4 font-notebook">Digital Library</h1>
-        <p className="text-xl text-gray-600 font-notebook">
-          Access thousands of study materials, notes, and educational resources
-        </p>
-      </div>
 
-      {/* Search and Filters */}
-      <div className="bg-white rounded-lg sketch-border p-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* Search */}
-          <div className="md:col-span-2 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        {/* Upload Section */}
+        <div className="sketch-card p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-notebook-text sketch-underline">Upload Documents</h2>
+          <div className="border-2 border-dashed border-notebook-line rounded-lg p-8 text-center hover:border-notebook-blue transition-colors">
+            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600 mb-4">Drag and drop your files here, or click to browse</p>
             <input
-              type="text"
-              placeholder="Search materials..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border-2 border-notebook-line rounded-lg focus:border-notebook-blue outline-none font-notebook"
+              type="file"
+              multiple
+              accept=".pdf,.doc,.docx,.txt"
+              onChange={handleFileUpload}
+              className="hidden"
+              id="file-upload"
             />
-          </div>
-
-          {/* Subject Filter */}
-          <div>
-            <select
-              value={selectedSubject}
-              onChange={(e) => setSelectedSubject(e.target.value)}
-              className="w-full p-3 border-2 border-notebook-line rounded-lg focus:border-notebook-blue outline-none font-notebook"
-            >
-              {subjects.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject === "all" ? "All Subjects" : subject}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Grade Filter */}
-          <div>
-            <select
-              value={selectedGrade}
-              onChange={(e) => setSelectedGrade(e.target.value)}
-              className="w-full p-3 border-2 border-notebook-line rounded-lg focus:border-notebook-blue outline-none font-notebook"
-            >
-              {grades.map((grade) => (
-                <option key={grade} value={grade}>
-                  {grade === "all" ? "All Grades" : `Class ${grade}`}
-                </option>
-              ))}
-            </select>
+            <label htmlFor="file-upload" className="btn-primary cursor-pointer inline-flex items-center">
+              <Upload className="w-4 h-4 mr-2" />
+              Choose Files
+            </label>
+            <p className="text-sm text-gray-500 mt-2">Supported formats: PDF, DOC, DOCX, TXT (Max 10MB each)</p>
           </div>
         </div>
-      </div>
 
-      {/* Results Count */}
-      <div className="flex items-center justify-between">
-        <p className="text-gray-600 font-notebook">
-          Showing {filteredItems.length} of {libraryItems.length} materials
-        </p>
-        <div className="flex items-center space-x-2 text-gray-600">
-          <Filter className="w-4 h-4" />
-          <span className="font-notebook text-sm">Filtered Results</span>
-        </div>
-      </div>
-
-      {/* Library Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredItems.map((item) => {
-          const TypeIcon = getTypeIcon(item.type)
-          const typeColor = getTypeColor(item.type)
-
-          return (
-            <div
-              key={item.id}
-              className="bg-white rounded-lg sketch-border p-6 hover:shadow-lg transition-all duration-300"
-            >
-              {/* Type Icon */}
-              <div className={`w-12 h-12 ${typeColor} rounded-lg flex items-center justify-center mb-4`}>
-                <TypeIcon className="w-6 h-6 text-white" />
-              </div>
-
-              {/* Content */}
-              <h3 className="font-bold text-notebook-text mb-2 font-notebook line-clamp-2">{item.title}</h3>
-
-              <div className="space-y-2 mb-4 text-sm text-gray-600 font-notebook">
-                <div className="flex justify-between">
-                  <span>Subject:</span>
-                  <span className="font-medium">{item.subject}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Grade:</span>
-                  <span className="font-medium">Class {item.grade}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Size:</span>
-                  <span className="font-medium">{item.size}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Downloads:</span>
-                  <span className="font-medium">{item.downloads.toLocaleString()}</span>
-                </div>
-              </div>
-
-              {/* Download Button */}
-              <LoadingButton onClick={() => handleDownload(item)} variant="primary" className="w-full">
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </LoadingButton>
+        {/* Search and Filter */}
+        <div className="sketch-card p-6 mb-8">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search documents..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-notebook-line rounded-lg focus:ring-2 focus:ring-notebook-blue focus:border-transparent sketch-input"
+              />
             </div>
-          )
-        })}
-      </div>
-
-      {/* No Results */}
-      {filteredItems.length === 0 && (
-        <div className="text-center py-12">
-          <StudentCharacter type="confused" size="medium" className="mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-notebook-text mb-4 font-notebook">No materials found</h3>
-          <p className="text-gray-600 font-notebook">Try adjusting your search terms or filters</p>
+            <div className="relative">
+              <Filter className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+              <select
+                value={selectedSubject}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+                className="pl-10 pr-8 py-2 border border-notebook-line rounded-lg focus:ring-2 focus:ring-notebook-blue focus:border-transparent appearance-none bg-white sketch-input"
+              >
+                {subjects.map((subject) => (
+                  <option key={subject} value={subject}>
+                    {subject === "all" ? "All Subjects" : subject}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
-      )}
 
-      {/* Upload Section */}
-      <div className="bg-gradient-to-r from-notebook-green to-notebook-blue rounded-lg text-white p-8 text-center">
-        <BookOpen className="w-12 h-12 mx-auto mb-4" />
-        <h3 className="text-2xl font-bold mb-4 font-notebook">Have study materials to share?</h3>
-        <p className="mb-6 opacity-90 font-notebook">Help other students by uploading your notes and resources</p>
-        <LoadingButton variant="secondary" className="bg-white text-notebook-blue hover:bg-gray-100">
-          Upload Materials
-        </LoadingButton>
+        {/* Documents Grid */}
+        <div className="sketch-card">
+          <div className="p-6 border-b border-notebook-line">
+            <h2 className="text-xl font-semibold text-notebook-text sketch-underline">
+              Your Documents ({filteredDocuments.length})
+            </h2>
+          </div>
+
+          {filteredDocuments.length === 0 ? (
+            <div className="p-12 text-center">
+              <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-notebook-text mb-2">No documents found</h3>
+              <p className="text-gray-500">
+                {searchTerm || selectedSubject !== "all"
+                  ? "Try adjusting your search or filter criteria"
+                  : "Upload your first document to get started"}
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-notebook-line">
+              {filteredDocuments.map((doc) => (
+                <div key={doc.id} className="p-6 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-10 h-10 bg-notebook-red bg-opacity-20 rounded-lg flex items-center justify-center border border-dashed border-notebook-red">
+                        <FileText className="w-5 h-5 text-notebook-red" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-medium text-notebook-text">{doc.name}</h3>
+                        <div className="flex items-center space-x-4 text-sm text-gray-500">
+                          <span>{doc.subject}</span>
+                          <span>•</span>
+                          <span>{doc.size}</span>
+                          <span>•</span>
+                          <span>Uploaded {new Date(doc.uploadDate).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button className="p-2 text-gray-400 hover:text-notebook-blue transition-colors">
+                        <Eye className="w-5 h-5" />
+                      </button>
+                      <button className="p-2 text-gray-400 hover:text-notebook-green transition-colors">
+                        <Download className="w-5 h-5" />
+                      </button>
+                      <button className="p-2 text-gray-400 hover:text-notebook-red transition-colors">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
 }
-
-export default Library

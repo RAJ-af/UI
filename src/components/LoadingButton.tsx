@@ -2,61 +2,84 @@
 
 import type React from "react"
 import { useState } from "react"
-import { cn } from "../lib/utils"
+import { Loader2, Sparkles, ThumbsUp, Star } from "lucide-react"
 
 interface LoadingButtonProps {
   children: React.ReactNode
   onClick?: () => void | Promise<void>
   className?: string
-  variant?: "primary" | "secondary" | "success"
   disabled?: boolean
+  loadingText?: string
+  animationType?: "default" | "sparkles" | "thumbsUp" | "stars"
 }
 
-const LoadingButton: React.FC<LoadingButtonProps> = ({
+export default function LoadingButton({
   children,
   onClick,
-  className,
-  variant = "primary",
+  className = "",
   disabled = false,
-}) => {
+  loadingText = "Loading...",
+  animationType = "default",
+}: LoadingButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [showAnimation, setShowAnimation] = useState(false)
 
   const handleClick = async () => {
-    if (onClick && !isLoading && !disabled) {
-      setIsLoading(true)
-      try {
+    if (disabled || isLoading) return
+
+    setIsLoading(true)
+    setShowAnimation(true)
+
+    try {
+      if (onClick) {
         await onClick()
-      } finally {
-        setIsLoading(false)
       }
+
+      // Simulate minimum loading time for better UX
+      await new Promise((resolve) => setTimeout(resolve, 800))
+    } finally {
+      setIsLoading(false)
+      setTimeout(() => setShowAnimation(false), 300)
     }
   }
 
-  const baseClasses =
-    "px-6 py-3 rounded-lg font-notebook font-bold transition-all duration-300 sketch-border relative overflow-hidden"
-
-  const variantClasses = {
-    primary: "bg-notebook-blue text-white hover:bg-blue-600",
-    secondary: "bg-notebook-yellow text-notebook-text hover:bg-yellow-500",
-    success: "bg-notebook-green text-white hover:bg-green-600",
+  const getAnimationIcon = () => {
+    switch (animationType) {
+      case "sparkles":
+        return <Sparkles className="w-4 h-4 animate-spin" />
+      case "thumbsUp":
+        return <ThumbsUp className="w-4 h-4 animate-bounce" />
+      case "stars":
+        return <Star className="w-4 h-4 animate-pulse" />
+      default:
+        return <Loader2 className="w-4 h-4 animate-spin" />
+    }
   }
 
   return (
     <button
       onClick={handleClick}
-      disabled={isLoading || disabled}
-      className={cn(baseClasses, variantClasses[variant], isLoading && "opacity-75 cursor-not-allowed", className)}
+      disabled={disabled || isLoading}
+      className={`relative overflow-hidden ${className} ${
+        isLoading ? "cursor-not-allowed" : "cursor-pointer"
+      } transition-all duration-300 transform hover:scale-105 active:scale-95`}
     >
-      {isLoading ? (
-        <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-          Loading...
+      <div className={`flex items-center justify-center transition-opacity ${isLoading ? "opacity-0" : "opacity-100"}`}>
+        {children}
+      </div>
+
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex items-center space-x-2">
+            {getAnimationIcon()}
+            {loadingText && <span>{loadingText}</span>}
+          </div>
         </div>
-      ) : (
-        children
+      )}
+
+      {showAnimation && (
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer" />
       )}
     </button>
   )
 }
-
-export default LoadingButton
