@@ -6,19 +6,17 @@ import { Camera, Upload, ImageIcon, Zap, CheckCircle, AlertCircle } from "lucide
 import StudentCharacter from "../components/StudentCharacter"
 import LoadingButton from "../components/LoadingButton"
 
-interface ScannedResult {
-  id: number
-  question: string
+interface ScanResult {
+  problem: string
   solution: string
-  subject: string
+  steps: string[]
   confidence: number
-  timestamp: Date
 }
 
 const ScanDoubts: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [results, setResults] = useState<ScannedResult[]>([])
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,199 +25,227 @@ const ScanDoubts: React.FC = () => {
       const reader = new FileReader()
       reader.onload = (e) => {
         setSelectedImage(e.target?.result as string)
+        setScanResult(null)
       }
       reader.readAsDataURL(file)
     }
   }
 
-  const handleScan = async () => {
+  const handleScanImage = async () => {
     if (!selectedImage) return
 
     setIsProcessing(true)
 
-    // Simulate processing
-    setTimeout(() => {
-      const mockResult: ScannedResult = {
-        id: results.length + 1,
-        question: "Solve the quadratic equation: x² + 5x + 6 = 0",
-        solution: `To solve x² + 5x + 6 = 0, we can use factoring:
+    // Simulate AI processing
+    await new Promise((resolve) => setTimeout(resolve, 3000))
 
-Step 1: Look for two numbers that multiply to 6 and add to 5
-Those numbers are 2 and 3 (2 × 3 = 6, 2 + 3 = 5)
+    // Mock result
+    const mockResult: ScanResult = {
+      problem: "Solve for x: 2x + 5 = 13",
+      solution: "x = 4",
+      steps: [
+        "Start with the equation: 2x + 5 = 13",
+        "Subtract 5 from both sides: 2x = 13 - 5",
+        "Simplify: 2x = 8",
+        "Divide both sides by 2: x = 8 ÷ 2",
+        "Final answer: x = 4",
+      ],
+      confidence: 95,
+    }
 
-Step 2: Factor the equation
-x² + 5x + 6 = (x + 2)(x + 3) = 0
-
-Step 3: Solve for x
-x + 2 = 0  →  x = -2
-x + 3 = 0  →  x = -3
-
-Therefore, x = -2 or x = -3`,
-        subject: "Mathematics",
-        confidence: 95,
-        timestamp: new Date(),
-      }
-
-      setResults((prev) => [mockResult, ...prev])
-      setIsProcessing(false)
-      setSelectedImage(null)
-    }, 3000)
+    setScanResult(mockResult)
+    setIsProcessing(false)
   }
 
   const triggerFileInput = () => {
     fileInputRef.current?.click()
   }
 
+  const sampleProblems = [
+    { type: "Math", example: "Quadratic equations, calculus, geometry" },
+    { type: "Physics", example: "Force diagrams, circuit problems" },
+    { type: "Chemistry", example: "Chemical equations, molecular structures" },
+    { type: "Biology", example: "Diagrams, classification charts" },
+  ]
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="flex justify-center">
-          <StudentCharacter type="thinking" size="large" className="character-float" />
+      <div className="text-center">
+        <div className="mb-6">
+          <StudentCharacter type="confused" size="large" className="mx-auto" />
         </div>
-        <h1 className="text-4xl font-bold text-notebook-text sketch-underline">Scan Your Doubts</h1>
-        <p className="text-xl text-notebook-text/80">Upload images of problems and get instant solutions</p>
+        <h1 className="text-4xl font-bold text-notebook-text mb-4 font-notebook">Scan & Solve Doubts</h1>
+        <p className="text-xl text-gray-600 font-notebook">
+          Take a photo of your problem and get instant step-by-step solutions
+        </p>
       </div>
 
       {/* Upload Section */}
-      <div className="notebook-card">
-        <div className="space-y-6">
+      <div className="bg-white rounded-lg sketch-border p-8">
+        <div className="text-center">
           {!selectedImage ? (
-            <div className="border-2 border-dashed border-notebook-blue rounded-lg p-8 text-center">
-              <div className="space-y-4">
-                <div className="flex justify-center">
-                  <ImageIcon className="w-16 h-16 text-notebook-blue/50" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-notebook-text mb-2">Upload a problem image</h3>
-                  <p className="text-notebook-text/70 mb-4">Take a photo or upload an image of your homework problem</p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <LoadingButton onClick={triggerFileInput} variant="blue" className="px-6 py-3">
-                    <Upload className="w-5 h-5 mr-2" />
-                    Choose File
-                  </LoadingButton>
-                  <LoadingButton onClick={triggerFileInput} variant="green" className="px-6 py-3">
-                    <Camera className="w-5 h-5 mr-2" />
-                    Take Photo
-                  </LoadingButton>
-                </div>
+            <div className="space-y-6">
+              <div className="w-24 h-24 bg-notebook-blue rounded-full flex items-center justify-center mx-auto">
+                <Camera className="w-12 h-12 text-white" />
               </div>
+
+              <div>
+                <h3 className="text-xl font-bold text-notebook-text mb-2 font-notebook">Upload Your Problem</h3>
+                <p className="text-gray-600 font-notebook">
+                  Take a clear photo or upload an image of your homework problem
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <LoadingButton onClick={triggerFileInput} variant="primary" className="flex items-center">
+                  <Upload className="w-5 h-5 mr-2" />
+                  Choose Image
+                </LoadingButton>
+
+                <LoadingButton onClick={triggerFileInput} variant="secondary" className="flex items-center">
+                  <Camera className="w-5 h-5 mr-2" />
+                  Take Photo
+                </LoadingButton>
+              </div>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                capture="environment"
+              />
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="relative">
+            <div className="space-y-6">
+              <div className="relative inline-block">
                 <img
                   src={selectedImage || "/placeholder.svg"}
                   alt="Uploaded problem"
-                  className="w-full max-h-64 object-contain rounded-lg border-2 border-gray-300"
+                  className="max-w-full max-h-64 rounded-lg sketch-border"
                 />
                 <button
-                  onClick={() => setSelectedImage(null)}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600"
+                  onClick={() => {
+                    setSelectedImage(null)
+                    setScanResult(null)
+                  }}
+                  className="absolute -top-2 -right-2 w-8 h-8 bg-notebook-red text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
                 >
                   ×
                 </button>
               </div>
-              <div className="flex justify-center">
-                <LoadingButton
-                  onClick={handleScan}
-                  variant="green"
-                  className="px-8 py-3 text-lg"
-                  disabled={isProcessing}
-                >
-                  <Zap className="w-5 h-5 mr-2" />
-                  {isProcessing ? "Processing..." : "Scan & Solve"}
-                </LoadingButton>
-              </div>
+
+              <LoadingButton
+                onClick={handleScanImage}
+                variant="primary"
+                disabled={isProcessing}
+                className="flex items-center"
+              >
+                <Zap className="w-5 h-5 mr-2" />
+                {isProcessing ? "Analyzing..." : "Scan & Solve"}
+              </LoadingButton>
             </div>
           )}
-
-          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
         </div>
       </div>
 
       {/* Processing Animation */}
       {isProcessing && (
-        <div className="notebook-card bg-notebook-blue/5 border-notebook-blue">
-          <div className="text-center space-y-4">
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-notebook-blue"></div>
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-notebook-text">Processing your image...</h3>
-              <p className="text-notebook-text/70">Our AI is analyzing the problem and preparing a solution</p>
-            </div>
-          </div>
+        <div className="bg-white rounded-lg sketch-border p-8 text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-notebook-blue border-t-transparent rounded-full mx-auto mb-4"></div>
+          <h3 className="text-xl font-bold text-notebook-text mb-2 font-notebook">AI is analyzing your problem...</h3>
+          <p className="text-gray-600 font-notebook">This usually takes a few seconds</p>
         </div>
       )}
 
       {/* Results */}
-      {results.length > 0 && (
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-notebook-text sketch-underline">Recent Solutions</h2>
+      {scanResult && (
+        <div className="bg-white rounded-lg sketch-border p-8 space-y-6">
+          <div className="flex items-center space-x-3">
+            <CheckCircle className="w-8 h-8 text-notebook-green" />
+            <div>
+              <h3 className="text-xl font-bold text-notebook-text font-notebook">Problem Solved!</h3>
+              <p className="text-gray-600 font-notebook">Confidence: {scanResult.confidence}%</p>
+            </div>
+          </div>
 
-          {results.map((result) => (
-            <div key={result.id} className="notebook-card">
-              <div className="space-y-4">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-6 h-6 text-notebook-green" />
-                    <div>
-                      <h3 className="text-lg font-bold text-notebook-text">Problem Solved</h3>
-                      <div className="flex items-center space-x-4 text-sm text-notebook-text/70">
-                        <span>Subject: {result.subject}</span>
-                        <span>Confidence: {result.confidence}%</span>
-                        <span>{result.timestamp.toLocaleString()}</span>
-                      </div>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-bold text-notebook-text mb-2 font-notebook">Detected Problem:</h4>
+              <p className="bg-gray-50 p-3 rounded-lg font-mono text-notebook-text">{scanResult.problem}</p>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-notebook-text mb-2 font-notebook">Solution:</h4>
+              <p className="bg-notebook-green/10 p-3 rounded-lg font-bold text-notebook-green font-mono text-lg">
+                {scanResult.solution}
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-notebook-text mb-2 font-notebook">Step-by-Step Solution:</h4>
+              <div className="space-y-2">
+                {scanResult.steps.map((step, index) => (
+                  <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="w-6 h-6 bg-notebook-blue text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      {index + 1}
                     </div>
+                    <p className="font-notebook text-notebook-text">{step}</p>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
-                {/* Question */}
-                <div className="bg-notebook-blue/10 p-4 rounded-lg border-l-4 border-notebook-blue">
-                  <h4 className="font-bold text-notebook-text mb-2">Question:</h4>
-                  <p className="text-notebook-text/80">{result.question}</p>
-                </div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <LoadingButton
+              onClick={() => {
+                setSelectedImage(null)
+                setScanResult(null)
+              }}
+              variant="primary"
+              className="flex items-center"
+            >
+              <Camera className="w-5 h-5 mr-2" />
+              Scan Another Problem
+            </LoadingButton>
 
-                {/* Solution */}
-                <div className="bg-notebook-green/10 p-4 rounded-lg border-l-4 border-notebook-green">
-                  <h4 className="font-bold text-notebook-text mb-2">Solution:</h4>
-                  <pre className="text-notebook-text/80 whitespace-pre-wrap font-sans">{result.solution}</pre>
-                </div>
+            <LoadingButton variant="secondary" className="flex items-center">
+              <ImageIcon className="w-5 h-5 mr-2" />
+              Save Solution
+            </LoadingButton>
+          </div>
+        </div>
+      )}
+
+      {/* Supported Problems */}
+      <div className="bg-white rounded-lg sketch-border p-6">
+        <h3 className="text-xl font-bold text-notebook-text mb-4 font-notebook">What can I scan?</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {sampleProblems.map((problem, index) => (
+            <div key={index} className="flex items-start space-x-3 p-3 border border-notebook-line rounded-lg">
+              <div className="w-8 h-8 bg-notebook-yellow rounded-lg flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h4 className="font-bold text-notebook-text font-notebook">{problem.type}</h4>
+                <p className="text-sm text-gray-600 font-notebook">{problem.example}</p>
               </div>
             </div>
           ))}
         </div>
-      )}
-
-      {/* Tips */}
-      <div className="notebook-card bg-notebook-yellow/10 border-notebook-yellow">
-        <div className="flex items-start space-x-3">
-          <AlertCircle className="w-6 h-6 text-notebook-yellow mt-1" />
-          <div>
-            <h3 className="text-lg font-bold text-notebook-text mb-3">Tips for better results:</h3>
-            <ul className="space-y-2 text-notebook-text/80">
-              <li>• Ensure the image is clear and well-lit</li>
-              <li>• Make sure the text/equations are clearly visible</li>
-              <li>• Crop the image to focus on the specific problem</li>
-              <li>• Avoid blurry or tilted images</li>
-              <li>• Include any relevant context or instructions</li>
-            </ul>
-          </div>
-        </div>
       </div>
 
-      {/* Supported Subjects */}
-      <div className="notebook-card">
-        <h3 className="text-lg font-bold text-notebook-text mb-4">Supported Subjects:</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {["Mathematics", "Physics", "Chemistry", "Biology"].map((subject) => (
-            <div key={subject} className="text-center p-3 bg-notebook-blue/10 rounded-lg">
-              <span className="font-medium text-notebook-text">{subject}</span>
-            </div>
-          ))}
+      {/* Tips */}
+      <div className="bg-gradient-to-r from-notebook-blue to-notebook-green rounded-lg text-white p-6">
+        <h3 className="text-xl font-bold mb-4 font-notebook">Tips for Better Results</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-notebook">
+          <div>• Ensure good lighting and clear image</div>
+          <div>• Keep the problem text horizontal</div>
+          <div>• Avoid shadows and reflections</div>
+          <div>• Include the complete problem statement</div>
         </div>
       </div>
     </div>

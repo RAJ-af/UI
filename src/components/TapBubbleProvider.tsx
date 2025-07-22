@@ -25,31 +25,21 @@ const TapBubbleProvider: React.FC<TapBubbleProviderProps> = ({ children }) => {
   const createTapBubble = useCallback((x: number, y: number) => {
     const bubble = document.createElement("div")
     bubble.className = "tap-bubble"
-    bubble.style.left = `${x - 20}px`
-    bubble.style.top = `${y - 20}px`
-    bubble.style.width = "40px"
-    bubble.style.height = "40px"
-    bubble.style.border = "2px dashed #74b9ff"
+    bubble.style.left = `${x - 10}px`
+    bubble.style.top = `${y - 10}px`
 
     document.body.appendChild(bubble)
 
     setTimeout(() => {
-      if (document.body.contains(bubble)) {
-        document.body.removeChild(bubble)
-      }
+      document.body.removeChild(bubble)
     }, 1000)
   }, [])
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      createTapBubble(e.clientX, e.clientY)
-    },
-    [createTapBubble],
-  )
-
   return (
     <TapBubbleContext.Provider value={{ createTapBubble }}>
-      <div onClick={handleClick}>{children}</div>
+      <div onClick={(e) => createTapBubble(e.clientX, e.clientY)} className="min-h-screen">
+        {children}
+      </div>
     </TapBubbleContext.Provider>
   )
 }

@@ -1,62 +1,53 @@
 import type React from "react"
-import { Mail, Phone, MapPin } from "lucide-react"
+import { Heart, Mail, Phone, MapPin } from "lucide-react"
 
 const Footer: React.FC = () => {
   return (
     <footer className="bg-notebook-text text-white py-8 mt-12">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* School Info */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* About */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Homework Club</h3>
-            <p className="text-gray-300 mb-4">Lal Chand Sharma Higher Secondary School</p>
-            <p className="text-gray-300 text-sm">
-              Empowering students through collaborative learning and academic excellence.
+            <h3 className="font-notebook font-bold text-lg mb-4">Homework Club</h3>
+            <p className="text-gray-300 font-notebook">
+              Study together, grow together. Join our community of learners and achieve academic excellence.
             </p>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-notebook-blue" />
-                <span className="text-gray-300">homeworkclub@lcshs.edu</span>
+            <h3 className="font-notebook font-bold text-lg mb-4">Contact Us</h3>
+            <div className="space-y-2 text-gray-300">
+              <div className="flex items-center space-x-2">
+                <Phone className="w-4 h-4" />
+                <span className="font-notebook">+91 9876543210</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-notebook-green" />
-                <span className="text-gray-300">+91 98765 43210</span>
+              <div className="flex items-center space-x-2">
+                <Mail className="w-4 h-4" />
+                <span className="font-notebook">help@homeworkclub.com</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-notebook-red" />
-                <span className="text-gray-300">School Campus, Education District</span>
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4" />
+                <span className="font-notebook">Delhi, India</span>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
-            <div className="space-y-2">
-              <a href="#" className="block text-gray-300 hover:text-notebook-blue transition-colors">
-                Study Materials
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-notebook-green transition-colors">
-                Assignment Help
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-notebook-yellow transition-colors">
-                Exam Preparation
-              </a>
-              <a href="#" className="block text-gray-300 hover:text-notebook-red transition-colors">
-                Student Support
-              </a>
+            <h3 className="font-notebook font-bold text-lg mb-4">Quick Links</h3>
+            <div className="space-y-2 text-gray-300 font-notebook">
+              <div>Study Materials</div>
+              <div>Practice Tests</div>
+              <div>Video Lectures</div>
+              <div>Discussion Forum</div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-6 text-center">
-          <p className="text-gray-400">
-            © 2024 Homework Club - Lal Chand Sharma Higher Secondary School. All rights reserved.
+        <div className="border-t border-gray-600 mt-8 pt-4 text-center">
+          <p className="text-gray-300 font-notebook flex items-center justify-center">
+            Made with <Heart className="w-4 h-4 mx-1 text-red-500" /> for students
           </p>
         </div>
       </div>

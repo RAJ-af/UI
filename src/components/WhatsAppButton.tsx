@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { MessageCircle, Check } from "lucide-react"
+import LoadingButton from "./LoadingButton"
 
 interface WhatsAppButtonProps {
   groupLink?: string
@@ -11,52 +12,43 @@ interface WhatsAppButtonProps {
 
 const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   groupLink = "https://chat.whatsapp.com/your-group-link",
-  className = "",
+  className,
 }) => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
+  const [joined, setJoined] = useState(false)
 
-  const handleClick = async () => {
-    setIsLoading(true)
+  const handleJoinGroup = async () => {
+    // Simulate joining process
+    await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    // Simulate loading
-    setTimeout(() => {
-      setIsLoading(false)
-      setIsSuccess(true)
+    // Open WhatsApp group
+    window.open(groupLink, "_blank")
 
-      // Open WhatsApp group
-      window.open(groupLink, "_blank")
+    setJoined(true)
 
-      // Reset success state after animation
-      setTimeout(() => {
-        setIsSuccess(false)
-      }, 3000)
-    }, 2000)
+    // Reset after 3 seconds
+    setTimeout(() => setJoined(false), 3000)
+  }
+
+  if (joined) {
+    return (
+      <div
+        className={`flex items-center justify-center p-4 bg-notebook-green text-white rounded-lg sketch-border animate-bounce ${className}`}
+      >
+        <Check className="w-6 h-6 mr-2" />
+        <span className="font-notebook font-bold">Successfully Joined!</span>
+      </div>
+    )
   }
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={isLoading}
-      className={`btn-notebook btn-green flex items-center space-x-3 ${className} ${isSuccess ? "bg-green-500" : ""}`}
+    <LoadingButton
+      onClick={handleJoinGroup}
+      variant="success"
+      className={`flex items-center justify-center ${className}`}
     >
-      {isLoading ? (
-        <>
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-          <span>Joining...</span>
-        </>
-      ) : isSuccess ? (
-        <>
-          <Check className="w-5 h-5" />
-          <span>Joined Successfully!</span>
-        </>
-      ) : (
-        <>
-          <MessageCircle className="w-5 h-5" />
-          <span>Join WhatsApp Group</span>
-        </>
-      )}
-    </button>
+      <MessageCircle className="w-5 h-5 mr-2" />
+      Join WhatsApp Group
+    </LoadingButton>
   )
 }
 

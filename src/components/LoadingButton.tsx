@@ -2,49 +2,56 @@
 
 import type React from "react"
 import { useState } from "react"
+import { cn } from "../lib/utils"
 
 interface LoadingButtonProps {
   children: React.ReactNode
-  onClick?: () => void
+  onClick?: () => void | Promise<void>
   className?: string
-  variant?: "blue" | "green" | "yellow" | "red"
+  variant?: "primary" | "secondary" | "success"
   disabled?: boolean
 }
 
 const LoadingButton: React.FC<LoadingButtonProps> = ({
   children,
   onClick,
-  className = "",
-  variant = "blue",
+  className,
+  variant = "primary",
   disabled = false,
 }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleClick = async () => {
-    if (disabled || isLoading) return
-
-    setIsLoading(true)
-
-    if (onClick) {
-      await onClick()
+    if (onClick && !isLoading && !disabled) {
+      setIsLoading(true)
+      try {
+        await onClick()
+      } finally {
+        setIsLoading(false)
+      }
     }
+  }
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 2000)
+  const baseClasses =
+    "px-6 py-3 rounded-lg font-notebook font-bold transition-all duration-300 sketch-border relative overflow-hidden"
+
+  const variantClasses = {
+    primary: "bg-notebook-blue text-white hover:bg-blue-600",
+    secondary: "bg-notebook-yellow text-notebook-text hover:bg-yellow-500",
+    success: "bg-notebook-green text-white hover:bg-green-600",
   }
 
   return (
     <button
       onClick={handleClick}
-      disabled={disabled || isLoading}
-      className={`btn-notebook btn-${variant} ${className} ${isLoading ? "opacity-75 cursor-not-allowed" : ""}`}
+      disabled={isLoading || disabled}
+      className={cn(baseClasses, variantClasses[variant], isLoading && "opacity-75 cursor-not-allowed", className)}
     >
       {isLoading ? (
-        <span className="flex items-center gap-2">
-          <span className="loading-dots"></span>
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
           Loading...
-        </span>
+        </div>
       ) : (
         children
       )}

@@ -2,100 +2,116 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
 }
 
-@layer components {
-  .notebook-card {
-    @apply bg-white rounded-lg shadow-lg border-2 border-gray-200 p-6 relative;
-    background-image: linear-gradient(to right, #ff6b6b 20px, transparent 20px),
-      repeating-linear-gradient(transparent, transparent 24px, #e5e5e5 24px, #e5e5e5 26px);
-    background-size: 100% 100%, 100% 26px;
-    background-position: 0 0, 0 0;
-  }
-
-  .btn-notebook {
-    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95 border-2 border-black;
-    box-shadow: 3px 3px 0px #000;
-  }
-
-  .btn-blue {
-    @apply bg-notebook-blue text-white hover:bg-blue-600;
-  }
-
-  .btn-green {
-    @apply bg-notebook-green text-white hover:bg-green-600;
-  }
-
-  .btn-yellow {
-    @apply bg-notebook-yellow text-black hover:bg-yellow-500;
-  }
-
-  .btn-red {
-    @apply bg-notebook-red text-white hover:bg-red-600;
-  }
-
-  .sketch-border {
-    border-image: url("data:image/svg+xml,%3csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m2,2 l96,0 l0,96 l-96,0 z' fill='none' stroke='%23000' stroke-width='2' stroke-dasharray='5,5'/%3e%3c/svg%3e")
-      2;
-  }
-
-  .sketch-underline {
-    position: relative;
-  }
-
-  .sketch-underline::after {
-    content: "";
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3e%3cpath d='M0,5 Q25,2 50,5 T100,5' stroke='%23000' stroke-width='2' fill='none'/%3e%3c/svg%3e");
-    background-size: 100% 100%;
-  }
-
-  .character-float {
-    animation: bounce-slow 3s infinite;
-  }
-
-  .tap-bubble {
-    position: fixed;
-    pointer-events: none;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(116, 185, 255, 0.6) 0%, rgba(116, 185, 255, 0.2) 50%, transparent 100%);
-    animation: tap-bubble 1s ease-out forwards;
-    z-index: 1000;
-  }
-}
-
-body {
-  font-family: "Kalam", "Comic Sans MS", cursive, system-ui, sans-serif;
-  background-color: #f8f9fa;
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
 }
 
 * {
-  box-sizing: border-box;
+  border-color: hsl(var(--border));
+}
+
+body {
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Notebook paper effect */
+.notebook-paper {
+  background-image: linear-gradient(to right, #ff6b6b 80px, transparent 80px),
+    linear-gradient(to bottom, transparent 24px, #e5e5e5 24px, #e5e5e5 26px, transparent 26px);
+  background-size: 100% 26px;
+  background-position: 0 0;
+}
+
+/* Sketch-style borders */
+.sketch-border {
+  border: 2px solid #2d3436;
+  border-radius: 8px;
+  position: relative;
+}
+
+.sketch-border::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px solid #636e72;
+  border-radius: 8px;
+  transform: rotate(0.5deg);
+  z-index: -1;
+}
+
+/* Tap bubble animation */
+.tap-bubble {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(116, 185, 255, 0.6) 0%, rgba(116, 185, 255, 0.2) 70%, transparent 100%);
+  pointer-events: none;
+  z-index: 9999;
+  animation: tap-bubble 1s ease-out forwards;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #74b9ff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0984e3;
 }

@@ -1,6 +1,6 @@
 import type React from "react"
 import { Link } from "react-router-dom"
-import { BookOpen, MessageCircle, Scan, Timer, Users, Star } from "lucide-react"
+import { BookOpen, MessageCircle, Camera, Timer, Users, TrendingUp, Award } from "lucide-react"
 import StudentCharacter from "../components/StudentCharacter"
 import LoadingButton from "../components/LoadingButton"
 
@@ -9,145 +9,144 @@ const Home: React.FC = () => {
     {
       icon: BookOpen,
       title: "Digital Library",
-      description: "Access study materials, notes, and resources",
-      color: "blue",
-      path: "/library",
+      description: "Access thousands of study materials, notes, and resources",
+      color: "bg-notebook-blue",
+      link: "/library",
     },
     {
       icon: MessageCircle,
-      title: "Ask AI",
-      description: "Get instant help with your homework questions",
-      color: "green",
-      path: "/ask-ai",
+      title: "Ask AI Tutor",
+      description: "Get instant help with your homework and doubts",
+      color: "bg-notebook-green",
+      link: "/ask-ai",
     },
     {
-      icon: Scan,
-      title: "Scan Doubts",
-      description: "Upload images of problems for quick solutions",
-      color: "yellow",
-      path: "/scan-doubts",
+      icon: Camera,
+      title: "Scan & Solve",
+      description: "Take a photo of your problem and get solutions",
+      color: "bg-notebook-yellow",
+      link: "/scan-doubts",
     },
     {
       icon: Timer,
       title: "Study Timer",
-      description: "Track your study sessions with Pomodoro technique",
-      color: "red",
-      path: "/timer",
+      description: "Use Pomodoro technique to boost productivity",
+      color: "bg-notebook-red",
+      link: "/timer",
     },
+  ]
+
+  const stats = [
+    { icon: Users, value: "10,000+", label: "Active Students" },
+    { icon: BookOpen, value: "5,000+", label: "Study Materials" },
+    { icon: Award, value: "95%", label: "Success Rate" },
+    { icon: TrendingUp, value: "24/7", label: "AI Support" },
   ]
 
   return (
     <div className="space-y-12">
       {/* Hero Section */}
-      <section className="text-center space-y-8">
-        <div className="relative">
-          <StudentCharacter type="happy" size="large" className="character-float mx-auto mb-6" />
+      <section className="text-center py-12">
+        <div className="mb-8">
+          <StudentCharacter type="happy" size="large" className="mx-auto animate-bounce-slow" />
         </div>
 
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-6xl font-bold text-notebook-text sketch-underline">
-            Welcome to Homework Club!
-          </h1>
-          <p className="text-xl text-notebook-text/80 max-w-2xl mx-auto">
-            Your one-stop destination for academic success at Lal Chand Sharma Higher Secondary School
-          </p>
-        </div>
+        <h1 className="text-4xl md:text-6xl font-bold text-notebook-text mb-6 font-notebook">
+          Welcome to <span className="text-notebook-blue">Homework Club</span>
+        </h1>
+
+        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto font-notebook">
+          Your ultimate study companion! Get help with homework, access study materials, and join a community of
+          learners working towards academic excellence.
+        </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/join-group">
-            <LoadingButton variant="green" className="text-lg px-8 py-4">
+            <LoadingButton variant="primary" className="w-full sm:w-auto">
               <Users className="w-5 h-5 mr-2" />
               Join Study Group
             </LoadingButton>
           </Link>
+
           <Link to="/library">
-            <LoadingButton variant="blue" className="text-lg px-8 py-4">
+            <LoadingButton variant="secondary" className="w-full sm:w-auto">
               <BookOpen className="w-5 h-5 mr-2" />
-              Explore Library
+              Browse Library
             </LoadingButton>
           </Link>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {features.map((feature, index) => {
-          const Icon = feature.icon
-          return (
-            <Link key={index} to={feature.path}>
-              <div className="notebook-card hover:transform hover:scale-105 transition-all duration-300 cursor-pointer">
-                <div className="text-center space-y-4">
-                  <div
-                    className={`w-16 h-16 mx-auto rounded-full bg-notebook-${feature.color} flex items-center justify-center`}
-                  >
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-notebook-text">{feature.title}</h3>
-                  <p className="text-notebook-text/70">{feature.description}</p>
+      <section>
+        <h2 className="text-3xl font-bold text-center text-notebook-text mb-8 font-notebook">
+          Everything You Need to Excel
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {features.map((feature, index) => {
+            const Icon = feature.icon
+            return (
+              <Link
+                key={index}
+                to={feature.link}
+                className="group p-6 bg-white rounded-lg sketch-border hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <div
+                  className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                >
+                  <Icon className="w-6 h-6 text-white" />
                 </div>
-              </div>
-            </Link>
-          )
-        })}
+
+                <h3 className="text-xl font-bold text-notebook-text mb-2 font-notebook">{feature.title}</h3>
+
+                <p className="text-gray-600 font-notebook">{feature.description}</p>
+              </Link>
+            )
+          })}
+        </div>
       </section>
 
       {/* Stats Section */}
-      <section className="notebook-card">
-        <div className="grid md:grid-cols-3 gap-8 text-center">
-          <div className="space-y-2">
-            <div className="text-3xl font-bold text-notebook-blue">500+</div>
-            <div className="text-notebook-text/70">Active Students</div>
-          </div>
-          <div className="space-y-2">
-            <div className="text-3xl font-bold text-notebook-green">1000+</div>
-            <div className="text-notebook-text/70">Problems Solved</div>
-          </div>
-          <div className="space-y-2">
-            <div className="text-3xl font-bold text-notebook-yellow">50+</div>
-            <div className="text-notebook-text/70">Study Materials</div>
-          </div>
+      <section className="bg-white rounded-lg sketch-border p-8">
+        <h2 className="text-3xl font-bold text-center text-notebook-text mb-8 font-notebook">
+          Join Thousands of Successful Students
+        </h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon
+            return (
+              <div key={index} className="text-center">
+                <div className="w-12 h-12 bg-notebook-blue rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <Icon className="w-6 h-6 text-white" />
+                </div>
+                <div className="text-2xl font-bold text-notebook-text font-notebook">{stat.value}</div>
+                <div className="text-gray-600 font-notebook text-sm">{stat.label}</div>
+              </div>
+            )
+          })}
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="space-y-8">
-        <h2 className="text-3xl font-bold text-center text-notebook-text sketch-underline">What Students Say</h2>
-
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="notebook-card">
-            <div className="flex items-start space-x-4">
-              <StudentCharacter type="studying" size="small" />
-              <div className="space-y-2">
-                <div className="flex text-notebook-yellow">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-notebook-text/80">
-                  "The AI help feature is amazing! It explains concepts so clearly."
-                </p>
-                <p className="text-sm text-notebook-text/60">- Priya, Class 12</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="notebook-card">
-            <div className="flex items-start space-x-4">
-              <StudentCharacter type="reading" size="small" />
-              <div className="space-y-2">
-                <div className="flex text-notebook-yellow">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current" />
-                  ))}
-                </div>
-                <p className="text-notebook-text/80">
-                  "Study timer helps me stay focused. My grades improved significantly!"
-                </p>
-                <p className="text-sm text-notebook-text/60">- Rahul, Class 11</p>
-              </div>
-            </div>
-          </div>
+      {/* CTA Section */}
+      <section className="text-center py-12 bg-gradient-to-r from-notebook-blue to-notebook-green rounded-lg text-white">
+        <div className="mb-6">
+          <StudentCharacter type="studying" size="medium" className="mx-auto" />
         </div>
+
+        <h2 className="text-3xl font-bold mb-4 font-notebook">Ready to Start Your Learning Journey?</h2>
+
+        <p className="text-xl mb-8 opacity-90 font-notebook">
+          Join our WhatsApp group and connect with fellow students today!
+        </p>
+
+        <Link to="/join-group">
+          <LoadingButton variant="secondary" className="bg-white text-notebook-blue hover:bg-gray-100">
+            <MessageCircle className="w-5 h-5 mr-2" />
+            Join WhatsApp Group Now
+          </LoadingButton>
+        </Link>
       </section>
     </div>
   )

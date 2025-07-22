@@ -2,112 +2,111 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Search, BookOpen, Download, Eye, Filter } from "lucide-react"
+import { Search, Download, BookOpen, FileText, Video, ImageIcon, Filter } from "lucide-react"
 import StudentCharacter from "../components/StudentCharacter"
 import LoadingButton from "../components/LoadingButton"
 
 interface LibraryItem {
   id: number
   title: string
+  type: "pdf" | "video" | "image" | "document"
   subject: string
-  type: "notes" | "assignment" | "reference" | "past-paper"
-  class: string
+  grade: string
   downloads: number
-  uploadDate: string
+  size: string
 }
 
 const Library: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedSubject, setSelectedSubject] = useState("all")
-  const [selectedClass, setSelectedClass] = useState("all")
+  const [selectedGrade, setSelectedGrade] = useState("all")
 
   const libraryItems: LibraryItem[] = [
     {
       id: 1,
-      title: "Physics Chapter 1: Motion in a Straight Line",
-      subject: "Physics",
-      type: "notes",
-      class: "11",
-      downloads: 245,
-      uploadDate: "2024-01-15",
+      title: "Mathematics Class 10 - Quadratic Equations",
+      type: "pdf",
+      subject: "Mathematics",
+      grade: "10",
+      downloads: 1250,
+      size: "2.5 MB",
     },
     {
       id: 2,
-      title: "Mathematics Assignment: Trigonometry",
-      subject: "Mathematics",
-      type: "assignment",
-      class: "10",
-      downloads: 189,
-      uploadDate: "2024-01-12",
+      title: "Physics - Laws of Motion Video Lecture",
+      type: "video",
+      subject: "Physics",
+      grade: "11",
+      downloads: 890,
+      size: "45 MB",
     },
     {
       id: 3,
-      title: "Chemistry Lab Manual",
+      title: "Chemistry - Periodic Table Chart",
+      type: "image",
       subject: "Chemistry",
-      type: "reference",
-      class: "12",
-      downloads: 156,
-      uploadDate: "2024-01-10",
+      grade: "9",
+      downloads: 2100,
+      size: "1.2 MB",
     },
     {
       id: 4,
-      title: "English Literature: Previous Year Papers",
+      title: "English Grammar - Tenses Practice Sheet",
+      type: "document",
       subject: "English",
-      type: "past-paper",
-      class: "12",
-      downloads: 298,
-      uploadDate: "2024-01-08",
+      grade: "8",
+      downloads: 1680,
+      size: "800 KB",
     },
     {
       id: 5,
-      title: "Biology Notes: Cell Structure",
+      title: "Biology - Human Body Systems",
+      type: "pdf",
       subject: "Biology",
-      type: "notes",
-      class: "11",
-      downloads: 167,
-      uploadDate: "2024-01-05",
+      grade: "12",
+      downloads: 945,
+      size: "3.8 MB",
     },
     {
       id: 6,
-      title: "History Assignment: Indian Independence",
+      title: "History - World War 2 Documentary",
+      type: "video",
       subject: "History",
-      type: "assignment",
-      class: "10",
-      downloads: 134,
-      uploadDate: "2024-01-03",
+      grade: "10",
+      downloads: 756,
+      size: "120 MB",
     },
   ]
 
-  const subjects = ["all", "Physics", "Mathematics", "Chemistry", "Biology", "English", "History"]
-  const classes = ["all", "9", "10", "11", "12"]
+  const subjects = ["all", "Mathematics", "Physics", "Chemistry", "Biology", "English", "History"]
+  const grades = ["all", "8", "9", "10", "11", "12"]
 
-  const getTypeColor = (type: string) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
-      case "notes":
-        return "blue"
-      case "assignment":
-        return "green"
-      case "reference":
-        return "yellow"
-      case "past-paper":
-        return "red"
+      case "pdf":
+      case "document":
+        return FileText
+      case "video":
+        return Video
+      case "image":
+        return ImageIcon
       default:
-        return "blue"
+        return FileText
     }
   }
 
-  const getTypeLabel = (type: string) => {
+  const getTypeColor = (type: string) => {
     switch (type) {
-      case "notes":
-        return "Notes"
-      case "assignment":
-        return "Assignment"
-      case "reference":
-        return "Reference"
-      case "past-paper":
-        return "Past Paper"
+      case "pdf":
+        return "bg-notebook-red"
+      case "video":
+        return "bg-notebook-blue"
+      case "image":
+        return "bg-notebook-green"
+      case "document":
+        return "bg-notebook-yellow"
       default:
-        return "Document"
+        return "bg-gray-500"
     }
   }
 
@@ -116,48 +115,51 @@ const Library: React.FC = () => {
       item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.subject.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesSubject = selectedSubject === "all" || item.subject === selectedSubject
-    const matchesClass = selectedClass === "all" || item.class === selectedClass
+    const matchesGrade = selectedGrade === "all" || item.grade === selectedGrade
 
-    return matchesSearch && matchesSubject && matchesClass
+    return matchesSearch && matchesSubject && matchesGrade
   })
+
+  const handleDownload = async (item: LibraryItem) => {
+    // Simulate download
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+    console.log(`Downloading: ${item.title}`)
+  }
 
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="flex justify-center">
-          <StudentCharacter type="reading" size="large" className="character-float" />
+      <div className="text-center">
+        <div className="mb-6">
+          <StudentCharacter type="studying" size="large" className="mx-auto" />
         </div>
-        <h1 className="text-4xl font-bold text-notebook-text sketch-underline">Digital Library</h1>
-        <p className="text-xl text-notebook-text/80">Access study materials, notes, and resources for all subjects</p>
+        <h1 className="text-4xl font-bold text-notebook-text mb-4 font-notebook">Digital Library</h1>
+        <p className="text-xl text-gray-600 font-notebook">
+          Access thousands of study materials, notes, and educational resources
+        </p>
       </div>
 
       {/* Search and Filters */}
-      <div className="notebook-card">
-        <div className="space-y-4">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-notebook-text/50 w-5 h-5" />
+      <div className="bg-white rounded-lg sketch-border p-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Search */}
+          <div className="md:col-span-2 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search for notes, assignments, or subjects..."
+              placeholder="Search materials..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:border-notebook-blue focus:outline-none"
+              className="w-full pl-10 pr-4 py-3 border-2 border-notebook-line rounded-lg focus:border-notebook-blue outline-none font-notebook"
             />
           </div>
 
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex items-center space-x-2">
-              <Filter className="w-5 h-5 text-notebook-text/70" />
-              <span className="text-notebook-text/70 font-medium">Filters:</span>
-            </div>
-
+          {/* Subject Filter */}
+          <div>
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-notebook-blue focus:outline-none"
+              className="w-full p-3 border-2 border-notebook-line rounded-lg focus:border-notebook-blue outline-none font-notebook"
             >
               {subjects.map((subject) => (
                 <option key={subject} value={subject}>
@@ -165,15 +167,18 @@ const Library: React.FC = () => {
                 </option>
               ))}
             </select>
+          </div>
 
+          {/* Grade Filter */}
+          <div>
             <select
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-              className="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-notebook-blue focus:outline-none"
+              value={selectedGrade}
+              onChange={(e) => setSelectedGrade(e.target.value)}
+              className="w-full p-3 border-2 border-notebook-line rounded-lg focus:border-notebook-blue outline-none font-notebook"
             >
-              {classes.map((cls) => (
-                <option key={cls} value={cls}>
-                  {cls === "all" ? "All Classes" : `Class ${cls}`}
+              {grades.map((grade) => (
+                <option key={grade} value={grade}>
+                  {grade === "all" ? "All Grades" : `Class ${grade}`}
                 </option>
               ))}
             </select>
@@ -182,78 +187,81 @@ const Library: React.FC = () => {
       </div>
 
       {/* Results Count */}
-      <div className="text-notebook-text/70">
-        Showing {filteredItems.length} of {libraryItems.length} items
+      <div className="flex items-center justify-between">
+        <p className="text-gray-600 font-notebook">
+          Showing {filteredItems.length} of {libraryItems.length} materials
+        </p>
+        <div className="flex items-center space-x-2 text-gray-600">
+          <Filter className="w-4 h-4" />
+          <span className="font-notebook text-sm">Filtered Results</span>
+        </div>
       </div>
 
-      {/* Library Items */}
-      <div className="grid gap-6">
-        {filteredItems.map((item) => (
-          <div key={item.id} className="notebook-card">
-            <div className="flex items-start justify-between">
-              <div className="flex-1 space-y-3">
-                <div className="flex items-start space-x-3">
-                  <BookOpen className="w-6 h-6 text-notebook-blue mt-1" />
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-notebook-text mb-2">{item.title}</h3>
-                    <div className="flex flex-wrap items-center gap-3 text-sm">
-                      <span
-                        className={`px-3 py-1 rounded-full bg-notebook-${getTypeColor(item.type)} text-white font-medium`}
-                      >
-                        {getTypeLabel(item.type)}
-                      </span>
-                      <span className="text-notebook-text/70">Subject: {item.subject}</span>
-                      <span className="text-notebook-text/70">Class: {item.class}</span>
-                      <span className="text-notebook-text/70">{item.downloads} downloads</span>
-                      <span className="text-notebook-text/70">
-                        Uploaded: {new Date(item.uploadDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
+      {/* Library Items Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredItems.map((item) => {
+          const TypeIcon = getTypeIcon(item.type)
+          const typeColor = getTypeColor(item.type)
+
+          return (
+            <div
+              key={item.id}
+              className="bg-white rounded-lg sketch-border p-6 hover:shadow-lg transition-all duration-300"
+            >
+              {/* Type Icon */}
+              <div className={`w-12 h-12 ${typeColor} rounded-lg flex items-center justify-center mb-4`}>
+                <TypeIcon className="w-6 h-6 text-white" />
+              </div>
+
+              {/* Content */}
+              <h3 className="font-bold text-notebook-text mb-2 font-notebook line-clamp-2">{item.title}</h3>
+
+              <div className="space-y-2 mb-4 text-sm text-gray-600 font-notebook">
+                <div className="flex justify-between">
+                  <span>Subject:</span>
+                  <span className="font-medium">{item.subject}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Grade:</span>
+                  <span className="font-medium">Class {item.grade}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Size:</span>
+                  <span className="font-medium">{item.size}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Downloads:</span>
+                  <span className="font-medium">{item.downloads.toLocaleString()}</span>
                 </div>
               </div>
 
-              <div className="flex space-x-2 ml-4">
-                <LoadingButton
-                  variant="blue"
-                  className="px-4 py-2 text-sm"
-                  onClick={() => console.log("Preview", item.id)}
-                >
-                  <Eye className="w-4 h-4 mr-1" />
-                  Preview
-                </LoadingButton>
-                <LoadingButton
-                  variant="green"
-                  className="px-4 py-2 text-sm"
-                  onClick={() => console.log("Download", item.id)}
-                >
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </LoadingButton>
-              </div>
+              {/* Download Button */}
+              <LoadingButton onClick={() => handleDownload(item)} variant="primary" className="w-full">
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </LoadingButton>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* No Results */}
       {filteredItems.length === 0 && (
         <div className="text-center py-12">
-          <StudentCharacter type="thinking" size="large" className="mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-notebook-text mb-2">No items found</h3>
-          <p className="text-notebook-text/70">Try adjusting your search terms or filters</p>
+          <StudentCharacter type="confused" size="medium" className="mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-notebook-text mb-4 font-notebook">No materials found</h3>
+          <p className="text-gray-600 font-notebook">Try adjusting your search terms or filters</p>
         </div>
       )}
 
       {/* Upload Section */}
-      <div className="notebook-card bg-notebook-blue/5 border-notebook-blue">
-        <div className="text-center space-y-4">
-          <h3 className="text-xl font-bold text-notebook-text">Have study materials to share?</h3>
-          <p className="text-notebook-text/70">Help your fellow students by uploading your notes and assignments</p>
-          <LoadingButton variant="blue" className="px-6 py-3">
-            Upload Materials
-          </LoadingButton>
-        </div>
+      <div className="bg-gradient-to-r from-notebook-green to-notebook-blue rounded-lg text-white p-8 text-center">
+        <BookOpen className="w-12 h-12 mx-auto mb-4" />
+        <h3 className="text-2xl font-bold mb-4 font-notebook">Have study materials to share?</h3>
+        <p className="mb-6 opacity-90 font-notebook">Help other students by uploading your notes and resources</p>
+        <LoadingButton variant="secondary" className="bg-white text-notebook-blue hover:bg-gray-100">
+          Upload Materials
+        </LoadingButton>
       </div>
     </div>
   )
