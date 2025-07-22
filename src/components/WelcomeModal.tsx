@@ -1,65 +1,94 @@
 "use client"
-import { X, BookOpen, Sparkles, Target, Users } from "lucide-react"
+
+import type React from "react"
+import { X, BookOpen, Brain, Camera, Timer, MessageCircle } from "lucide-react"
 import StudentCharacter from "./StudentCharacter"
 
 interface WelcomeModalProps {
-  isOpen: boolean
   onClose: () => void
 }
 
-export default function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
-  if (!isOpen) return null
-
-  const features = [
-    { icon: BookOpen, text: "Access digital library", color: "blue" as const },
-    { icon: Sparkles, text: "Get AI assistance", color: "yellow" as const },
-    { icon: Target, text: "Track study progress", color: "green" as const },
-    { icon: Users, text: "Join study community", color: "red" as const },
-  ]
-
+const WelcomeModal: React.FC<WelcomeModalProps> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full p-6 bounce-in sketch-border">
-        <div className="text-center mb-6">
-          <div className="flex justify-center mb-4">
-            <StudentCharacter type="reading" size="lg" color="blue" />
-          </div>
-          <h2 className="text-2xl font-bold text-notebook-text mb-2 sketch-underline">Welcome to Homework Club!</h2>
-          <p className="text-gray-600">Your educational journey starts here</p>
-        </div>
-
-        <div className="space-y-3 mb-6">
-          {features.map((feature, index) => {
-            const Icon = feature.icon
-            return (
-              <div
-                key={index}
-                className="flex items-center space-x-3 slide-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center border border-dashed border-gray-400">
-                  <Icon className={`w-4 h-4 text-notebook-${feature.color}`} />
-                </div>
-                <span className="text-gray-700">{feature.text}</span>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="space-y-3">
-          <button onClick={onClose} className="w-full btn-primary">
-            Let's Start Learning!
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-notebook-paper border-4 border-dashed border-sketch-black rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="p-6 border-b-2 border-dashed border-sketch-gray relative">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 hover:bg-sketch-gray/20 rounded-full transition-colors"
+          >
+            <X className="w-6 h-6" />
           </button>
-          <p className="text-xs text-gray-500 text-center">Tap anywhere on the screen to discover helpful tips</p>
+
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <StudentCharacter type="waving" size="medium" />
+            </div>
+            <h2 className="text-3xl font-bold text-sketch-black mb-2">Welcome to Homework Club! 🎉</h2>
+            <p className="text-sketch-gray">Your AI-powered study companion is here to help you excel!</p>
+          </div>
         </div>
 
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        {/* Features */}
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-start space-x-3 p-4 border-2 border-dashed border-notebook-blue/30 rounded-lg">
+              <BookOpen className="w-8 h-8 text-notebook-blue flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-sketch-black">Library</h3>
+                <p className="text-sm text-sketch-gray">Upload & download study materials</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 p-4 border-2 border-dashed border-notebook-green/30 rounded-lg">
+              <Brain className="w-8 h-8 text-notebook-green flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-sketch-black">Ask AI</h3>
+                <p className="text-sm text-sketch-gray">Get instant homework help</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 p-4 border-2 border-dashed border-notebook-red/30 rounded-lg">
+              <Camera className="w-8 h-8 text-notebook-red flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-sketch-black">Scan Doubts</h3>
+                <p className="text-sm text-sketch-gray">Photo → Solution in seconds</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3 p-4 border-2 border-dashed border-notebook-yellow/30 rounded-lg">
+              <Timer className="w-8 h-8 text-notebook-yellow flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-sketch-black">Study Timer</h3>
+                <p className="text-sm text-sketch-gray">Track focus & build streaks</p>
+              </div>
+            </div>
+          </div>
+
+          {/* WhatsApp CTA */}
+          <div className="bg-gradient-to-r from-notebook-green/10 to-notebook-blue/10 p-6 rounded-lg border-2 border-dashed border-notebook-green/30 text-center">
+            <MessageCircle className="w-12 h-12 text-notebook-green mx-auto mb-3" />
+            <h3 className="text-xl font-bold text-sketch-black mb-2">Join Our Study Community!</h3>
+            <p className="text-sketch-gray mb-4">Connect with fellow students, share notes, and get help 24/7</p>
+            <button className="bg-notebook-green text-white px-6 py-3 rounded-full font-bold hover:bg-notebook-green/90 transition-colors">
+              Join WhatsApp Group
+            </button>
+          </div>
+
+          {/* Get Started Button */}
+          <div className="text-center">
+            <button
+              onClick={onClose}
+              className="bg-notebook-blue text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-notebook-blue/90 transition-all transform hover:scale-105"
+            >
+              Let's Start Learning! 🚀
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
 }
+
+export default WelcomeModal

@@ -1,86 +1,117 @@
-import { Mail, Phone, GraduationCap } from "lucide-react"
-import StudentCharacter from "./StudentCharacter"
+import type React from "react"
+import { BookOpen, Mail, Phone, MapPin, Heart } from "lucide-react"
 
-export default function Footer() {
+const Footer: React.FC = () => {
   return (
-    <footer className="bg-notebook-text text-white border-t-4 border-dashed border-gray-600">
+    <footer className="bg-sketch-black text-notebook-paper border-t-4 border-dashed border-sketch-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <StudentCharacter type="studying" size="sm" color="blue" />
-              <span className="text-xl font-bold sketch-underline">Homework Club</span>
+          {/* Logo & Description */}
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-notebook-blue rounded-full flex items-center justify-center border-2 border-dashed border-notebook-paper">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xl font-bold">Homework Club</span>
             </div>
-            <p className="text-gray-400 mb-4 max-w-md">
-              Your ultimate educational companion for homework help, AI assistance, and productivity tracking. Join
-              students improving their academic performance.
+            <p className="text-sketch-gray text-sm">
+              Your AI-powered study companion helping students excel in their academic journey.
             </p>
-            <div className="flex space-x-2">
-              <div className="w-3 h-3 bg-notebook-red rounded-full animate-pulse border border-dashed border-red-300"></div>
-              <div
-                className="w-3 h-3 bg-notebook-yellow rounded-full animate-pulse border border-dashed border-yellow-300"
-                style={{ animationDelay: "0.2s" }}
-              ></div>
-              <div
-                className="w-3 h-3 bg-notebook-green rounded-full animate-pulse border border-dashed border-green-300"
-                style={{ animationDelay: "0.4s" }}
-              ></div>
-              <div
-                className="w-3 h-3 bg-notebook-blue rounded-full animate-pulse border border-dashed border-blue-300"
-                style={{ animationDelay: "0.6s" }}
-              ></div>
-            </div>
           </div>
 
           {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-notebook-blue sketch-underline">Quick Links</h3>
-            <ul className="space-y-2">
-              {[
-                { name: "Home", href: "/" },
-                { name: "Library", href: "/library" },
-                { name: "Ask AI", href: "/ask-ai" },
-                { name: "Timer", href: "/timer" },
-              ].map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 hover:translate-x-1 transform inline-block border-b border-dashed border-transparent hover:border-gray-400"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-notebook-yellow">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <a href="/" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/library" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                  Library
+                </a>
+              </li>
+              <li>
+                <a href="/ask-ai" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                  Ask AI
+                </a>
+              </li>
+              <li>
+                <a href="/scan-doubts" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                  Scan Doubts
+                </a>
+              </li>
+              <li>
+                <a href="/timer" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                  Study Timer
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-notebook-green sketch-underline">Contact Info</h3>
-            <ul className="space-y-3">
-              <li className="flex items-center space-x-2 text-gray-400">
-                <Mail className="w-4 h-4 text-notebook-red" />
-                <span className="text-sm">himanshubhatnagar.in@gmail.com</span>
-              </li>
-              <li className="flex items-center space-x-2 text-gray-400">
-                <Phone className="w-4 h-4 text-notebook-yellow" />
-                <span>7011476556</span>
-              </li>
-              <li className="flex items-start space-x-2 text-gray-400">
-                <GraduationCap className="w-4 h-4 text-notebook-blue mt-1" />
-                <span className="text-sm">Lal Chand Sharma Higher Secondary School</span>
-              </li>
+          {/* Features */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-notebook-green">Features</h3>
+            <ul className="space-y-2 text-sm text-sketch-gray">
+              <li>AI Homework Assistant</li>
+              <li>Document Library</li>
+              <li>Photo Problem Solver</li>
+              <li>Study Timer & Streaks</li>
+              <li>WhatsApp Community</li>
             </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-notebook-red">Contact Us</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-start space-x-2">
+                <MapPin className="w-4 h-4 text-notebook-red mt-0.5 flex-shrink-0" />
+                <span className="text-sketch-gray">Lal Chand Sharma Higher Secondary School</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mail className="w-4 h-4 text-notebook-blue flex-shrink-0" />
+                <a
+                  href="mailto:himanshubhatnagar.in@gmail.com"
+                  className="text-sketch-gray hover:text-notebook-blue transition-colors"
+                >
+                  himanshubhatnagar.in@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Phone className="w-4 h-4 text-notebook-green flex-shrink-0" />
+                <a href="tel:7011476556" className="text-sketch-gray hover:text-notebook-green transition-colors">
+                  7011476556
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="border-t-2 border-dashed border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-400 flex items-center justify-center">
-            © 2024 Homework Club. Made with care for students worldwide.
-          </p>
+        {/* Bottom Bar */}
+        <div className="mt-12 pt-8 border-t-2 border-dashed border-sketch-gray">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-sketch-gray text-sm">
+              © 2024 Homework Club. Made with <Heart className="w-4 h-4 text-notebook-red inline mx-1" /> for students.
+            </p>
+            <div className="flex space-x-6 text-sm">
+              <a href="#" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                Terms of Service
+              </a>
+              <a href="#" className="text-sketch-gray hover:text-notebook-blue transition-colors">
+                Support
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
   )
 }
+
+export default Footer

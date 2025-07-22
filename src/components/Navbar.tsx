@@ -1,78 +1,94 @@
 "use client"
 
+import type React from "react"
 import { useState } from "react"
-import { Link } from "react-router-dom"
-import { Menu, X, BookOpen, Brain, Camera, Clock, Library } from "lucide-react"
-import LoadingButton from "./LoadingButton"
-import StudentCharacter from "./StudentCharacter"
+import { Link, useLocation } from "react-router-dom"
+import { Menu, X, BookOpen, Brain, Camera, Timer, Library, Users } from "lucide-react"
 
-export default function Navbar() {
+const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
 
   const navItems = [
-    { name: "Home", path: "/", icon: BookOpen, color: "text-notebook-blue" },
-    { name: "Library", path: "/library", icon: Library, color: "text-notebook-green" },
-    { name: "Ask AI", path: "/ask-ai", icon: Brain, color: "text-notebook-yellow" },
-    { name: "Scan Doubts", path: "/scan-doubts", icon: Camera, color: "text-notebook-red" },
-    { name: "Timer", path: "/timer", icon: Clock, color: "text-notebook-blue" },
+    { path: "/", label: "Home", icon: BookOpen },
+    { path: "/library", label: "Library", icon: Library },
+    { path: "/ask-ai", label: "Ask AI", icon: Brain },
+    { path: "/scan-doubts", label: "Scan", icon: Camera },
+    { path: "/timer", label: "Timer", icon: Timer },
+    { path: "/join-group", label: "Join", icon: Users },
   ]
 
+  const isActive = (path: string) => location.pathname === path
+
   return (
-    <nav className="bg-white border-b-2 border-dashed border-notebook-line sticky top-0 z-40 sketch-shadow">
+    <nav className="bg-notebook-paper border-b-4 border-dashed border-sketch-black sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-3 group">
-              <StudentCharacter type="reading" size="sm" color="blue" />
-              <span className="text-xl font-bold text-notebook-text sketch-underline">Homework Club</span>
-            </Link>
-          </div>
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2 group">
+            <div className="w-10 h-10 bg-notebook-blue rounded-full flex items-center justify-center border-2 border-dashed border-sketch-black group-hover:animate-spin">
+              <BookOpen className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xl font-bold text-sketch-black">Homework Club</span>
+          </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div className="hidden md:flex space-x-1">
             {navItems.map((item) => {
               const Icon = item.icon
               return (
                 <Link
-                  key={item.name}
+                  key={item.path}
                   to={item.path}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-xl text-notebook-text hover:bg-gray-100 transition-all duration-300 hover:scale-105 sketch-border-hover"
+                  className={`
+                    flex items-center space-x-2 px-4 py-2 rounded-full border-2 border-dashed
+                    transition-all duration-200 hover:scale-105
+                    ${
+                      isActive(item.path)
+                        ? "bg-notebook-blue text-white border-notebook-blue"
+                        : "text-sketch-black border-transparent hover:border-sketch-gray hover:bg-sketch-gray/10"
+                    }
+                  `}
                 >
-                  <Icon className={`w-4 h-4 ${item.color}`} />
-                  <span className="font-medium">{item.name}</span>
+                  <Icon className="w-4 h-4" />
+                  <span className="font-medium">{item.label}</span>
                 </Link>
               )
             })}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <LoadingButton
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-notebook-text hover:bg-gray-100 rounded-xl"
-              loadingText=""
-              animationType="stars"
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </LoadingButton>
-          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-full border-2 border-dashed border-sketch-black hover:bg-sketch-gray/10 transition-colors"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t-2 border-dashed border-notebook-line">
+          <div className="md:hidden py-4 border-t-2 border-dashed border-sketch-gray">
+            <div className="space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon
                 return (
                   <Link
-                    key={item.name}
+                    key={item.path}
                     to={item.path}
-                    className="flex items-center space-x-3 text-notebook-text hover:bg-gray-100 block px-4 py-3 rounded-xl font-medium transition-all duration-300"
                     onClick={() => setIsOpen(false)}
+                    className={`
+                      flex items-center space-x-3 px-4 py-3 rounded-lg border-2 border-dashed
+                      transition-all duration-200
+                      ${
+                        isActive(item.path)
+                          ? "bg-notebook-blue text-white border-notebook-blue"
+                          : "text-sketch-black border-transparent hover:border-sketch-gray hover:bg-sketch-gray/10"
+                      }
+                    `}
                   >
-                    <Icon className={`w-5 h-5 ${item.color}`} />
-                    <span>{item.name}</span>
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium">{item.label}</span>
                   </Link>
                 )
               })}
@@ -83,3 +99,5 @@ export default function Navbar() {
     </nav>
   )
 }
+
+export default Navbar

@@ -78,3 +78,6 @@ export const useTapBubbles = () => {
   }
   return context
 }
+
+// ✅ Default export added - यही missing था!
+export default TapBubbleProvider

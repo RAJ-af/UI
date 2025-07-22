@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Layout from "./components/Layout"
 import SplashScreen from "./components/SplashScreen"
+import WelcomeModal from "./components/WelcomeModal"
 import TapBubbleProvider from "./components/TapBubbleProvider"
 import Home from "./pages/Home"
 import Library from "./pages/Library"
@@ -13,22 +14,23 @@ import Timer from "./pages/Timer"
 import JoinGroup from "./pages/JoinGroup"
 
 function App() {
-  const [isFirstVisit, setIsFirstVisit] = useState(false)
   const [showSplash, setShowSplash] = useState(true)
+  const [showWelcome, setShowWelcome] = useState(false)
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisitedHomeworkClub")
-    if (!hasVisited) {
-      setIsFirstVisit(true)
-      localStorage.setItem("hasVisitedHomeworkClub", "true")
-    }
-
-    // Show splash screen for 3 seconds
-    const timer = setTimeout(() => {
+    // Show splash for 3 seconds
+    const splashTimer = setTimeout(() => {
       setShowSplash(false)
+
+      // Check if first visit
+      const hasVisited = localStorage.getItem("homework-club-visited")
+      if (!hasVisited) {
+        setShowWelcome(true)
+        localStorage.setItem("homework-club-visited", "true")
+      }
     }, 3000)
 
-    return () => clearTimeout(timer)
+    return () => clearTimeout(splashTimer)
   }, [])
 
   if (showSplash) {
@@ -38,7 +40,7 @@ function App() {
   return (
     <TapBubbleProvider>
       <Router>
-        <Layout showWelcome={isFirstVisit}>
+        <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/library" element={<Library />} />
@@ -48,6 +50,7 @@ function App() {
             <Route path="/join-group" element={<JoinGroup />} />
           </Routes>
         </Layout>
+        {showWelcome && <WelcomeModal onClose={() => setShowWelcome(false)} />}
       </Router>
     </TapBubbleProvider>
   )

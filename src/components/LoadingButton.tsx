@@ -6,48 +6,55 @@ import { Loader2, Sparkles, ThumbsUp, Star } from "lucide-react"
 
 interface LoadingButtonProps {
   children: React.ReactNode
-  onClick?: () => void | Promise<void>
+  onClick?: () => void
+  variant?: "primary" | "secondary" | "success" | "warning"
+  loadingType?: "spinner" | "sparkles" | "thumbs" | "stars"
   className?: string
   disabled?: boolean
-  loadingText?: string
-  animationType?: "default" | "sparkles" | "thumbsUp" | "stars"
 }
 
-export default function LoadingButton({
+const LoadingButton: React.FC<LoadingButtonProps> = ({
   children,
   onClick,
+  variant = "primary",
+  loadingType = "spinner",
   className = "",
   disabled = false,
-  loadingText = "Loading...",
-  animationType = "default",
-}: LoadingButtonProps) {
+}) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [showAnimation, setShowAnimation] = useState(false)
 
   const handleClick = async () => {
     if (disabled || isLoading) return
 
     setIsLoading(true)
-    setShowAnimation(true)
 
-    try {
-      if (onClick) {
-        await onClick()
-      }
-
-      // Simulate minimum loading time for better UX
-      await new Promise((resolve) => setTimeout(resolve, 800))
-    } finally {
+    // Simulate loading
+    setTimeout(() => {
       setIsLoading(false)
-      setTimeout(() => setShowAnimation(false), 300)
+      if (onClick) onClick()
+    }, 2000)
+  }
+
+  const getVariantClasses = () => {
+    switch (variant) {
+      case "primary":
+        return "bg-notebook-blue hover:bg-notebook-blue/90 text-white"
+      case "secondary":
+        return "bg-sketch-gray hover:bg-sketch-gray/90 text-white"
+      case "success":
+        return "bg-notebook-green hover:bg-notebook-green/90 text-white"
+      case "warning":
+        return "bg-notebook-yellow hover:bg-notebook-yellow/90 text-sketch-black"
+      default:
+        return "bg-notebook-blue hover:bg-notebook-blue/90 text-white"
     }
   }
 
-  const getAnimationIcon = () => {
-    switch (animationType) {
+  const getLoadingIcon = () => {
+    switch (loadingType) {
       case "sparkles":
         return <Sparkles className="w-4 h-4 animate-spin" />
-      case "thumbsUp":
+      case "thumbs":
         return <ThumbsUp className="w-4 h-4 animate-bounce" />
       case "stars":
         return <Star className="w-4 h-4 animate-pulse" />
@@ -60,26 +67,20 @@ export default function LoadingButton({
     <button
       onClick={handleClick}
       disabled={disabled || isLoading}
-      className={`relative overflow-hidden ${className} ${
-        isLoading ? "cursor-not-allowed" : "cursor-pointer"
-      } transition-all duration-300 transform hover:scale-105 active:scale-95`}
+      className={`
+        px-6 py-3 rounded-full font-bold border-2 border-dashed border-transparent
+        transition-all duration-200 transform hover:scale-105 active:scale-95
+        disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
+        ${getVariantClasses()}
+        ${className}
+      `}
     >
-      <div className={`flex items-center justify-center transition-opacity ${isLoading ? "opacity-0" : "opacity-100"}`}>
-        {children}
+      <div className="flex items-center justify-center space-x-2">
+        {isLoading && getLoadingIcon()}
+        <span>{isLoading ? "Loading..." : children}</span>
       </div>
-
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex items-center space-x-2">
-            {getAnimationIcon()}
-            {loadingText && <span>{loadingText}</span>}
-          </div>
-        </div>
-      )}
-
-      {showAnimation && (
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer" />
-      )}
     </button>
   )
 }
+
+export default LoadingButton
